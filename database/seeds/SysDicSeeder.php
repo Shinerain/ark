@@ -13,7 +13,26 @@ class SysDicSeeder extends Seeder
     public function run()
     {
         //icon
-	    //SysDic::create(['category' => 'icon', 'text' => '', 'value' => '']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-tag', 'value' => 'fa fa-tag']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-tasks', 'value' => 'fa fa-tasks']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-home', 'value' => 'fa fa-home']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-server', 'value' => 'fa fa-server']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-user-o', 'value' => 'fa fa-user-o']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-users', 'value' => 'fa fa-users']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-line-chart', 'value' => 'fa fa-line-chart']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-warning', 'value' => 'fa fa-warning']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-wrench', 'value' => 'fa fa-wrench']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-vcard', 'value' => 'fa fa-vcard']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-vcard-o', 'value' => 'fa fa-vcard-o']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-tree', 'value' => 'fa fa-tree']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-upload', 'value' => 'fa fa-upload']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-download', 'value' => 'fa fa-download']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-calendar', 'value' => 'fa fa-calendar']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-calendar-o', 'value' => 'fa fa-calendar-o']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-unlock', 'value' => 'fa fa-unlock']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-lock', 'value' => 'fa fa-lock']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-folder', 'value' => 'fa fa-folder']);
+	    SysDic::create(['category' => 'icon', 'text' => 'fa-folder-o', 'value' => 'fa fa-folder-o']);
 
 	    //column types
 	    SysDic::create(['category' => 'data_type', 'text' => 'string', 'value' => 'string']);

@@ -1,5 +1,7 @@
 vendor/
 node_modules/
+typings/
+zone/
 
 # Laravel 4 specific
 bootstrap/compiled.php
@@ -15,3 +17,5 @@ bootstrap/cache/
 .rocketeer/
 
 /.idea
+/public/js/*
+npm-debug.log

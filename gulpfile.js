@@ -1,6 +1,8 @@
 const elixir = require('laravel-elixir');
 
-require('laravel-elixir-vue-2');
+require('laravel-elixir-vue');
+require('elixir-typescript');
+
 
 /*
  |--------------------------------------------------------------------------
@@ -13,7 +15,33 @@ require('laravel-elixir-vue-2');
  |
  */
 
-elixir(mix => {
+elixir(function(mix){
     mix.sass('app.scss')
-       .webpack('app.js');
+        .webpack('app.js')
+        .copy('node_modules/@angular', 'public/js/@angular')
+        .copy('node_modules/anular2-in-memory-web-api', 'public/js/anular2-in-memory-web-api')
+        .copy('node_modules/core-js', 'public/js/core-js')
+        .copy('node_modules/reflect-metadata', 'public/js/reflect-metadata')
+        .copy('node_modules/systemjs', 'public/js/systemjs')
+        .copy('node_modules/rxjs', 'public/js/rxjs')
+        .copy('node_modules/zone.js', 'public/js/zone.js')
+
+        .typescript(
+            [
+                'app.component.ts',
+                'app.module.ts',
+                'main.ts'
+            ],
+            'public/app',
+            {
+                "target": "es5",
+                "module": "system",
+                "moduleResolution": "node",
+                "sourceMap": true,
+                "emitDecoratorMetadata": true,
+                "experimentalDecorators": true,
+                "removeComments": false,
+                "noImplicitAny": false
+            }
+        );
 });
