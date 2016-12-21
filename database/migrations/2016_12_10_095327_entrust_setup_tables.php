@@ -41,7 +41,7 @@ class EntrustSetupTables extends Migration
             $table->string('display_name')->nullable()->comment('显示名称');
             $table->string('description')->nullable()->comment('描述');
 	        $table->string('type')->default('menu')->comment('类型(menu, policy)');
-	        $table->json('data')->default('')->comment('json data,menu=>{category:"module/page/function", route: "route_name"}, policy=>{model: "user", op: ["view","create","update","delete"]}');
+	        $table->string('data')->default('')->comment('json data,menu=>{category:"module/page/function", route: "route_name"}, policy=>{model: "user", op: ["view","create","update","delete"]}');
             $table->timestamps();
         });
 

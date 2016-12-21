@@ -23,7 +23,7 @@ class CreateTableSysColumns extends Migration
 		    $table->integer("length")->default(0)->comment('字段长度');
 		    $table->integer("decimal_scale")->default(0)->comment('小数点');
 		    $table->char('is_nullable', 1)->default('Y')->comment('是否为空');
-		    $table->integer('is_autoincrement', 1)->default(0)->comment('是否自增');
+		    $table->integer('is_autoincrement')->default(0)->comment('是否自增');
 		    $table->string('key_type')->default('')->comment('键类型');
 		    $table->string('default_value')->default('')->comment('默认值');
 		    $table->string('comment')->default('')->comment('描述');

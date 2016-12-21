@@ -9,7 +9,8 @@
         "laravel/framework": "5.3.*",
         "zizaco/entrust": "5.2.x-dev",
         "predis/predis": "^1.1",
-        "laravelcollective/html": "^5.3"
+        "laravelcollective/html": "^5.3",
+        "philo/laravel-blade": "3.*"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

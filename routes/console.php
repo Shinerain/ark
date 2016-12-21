@@ -1,6 +1,9 @@
 <?php
 
+use App\Services\DbHelper;
 use Illuminate\Foundation\Inspiring;
+use Philo\Blade\Blade;
+use App\Services\CodeBuilder;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,3 +19,12 @@ use Illuminate\Foundation\Inspiring;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->describe('Display an inspiring quote');
+
+Artisan::command('test', function () {
+	$this->comment('begin ...');
+	$db = new DbHelper();
+	$columns = $db->getColumns('sys_dics');
+	$builder = new CodeBuilder('SysDic', 'sys_dics', $columns);
+	$builder->createFiles('route');
+	$this->comment('end ...');
+})->describe('philo blade test');
