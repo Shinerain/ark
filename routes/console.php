@@ -23,8 +23,8 @@ Artisan::command('inspire', function () {
 Artisan::command('test', function () {
 	$this->comment('begin ...');
 	$db = new DbHelper();
-	$columns = $db->getColumns('sys_dics');
-	$builder = new CodeBuilder('SysDic', 'sys_dics', $columns);
-	$builder->createFiles('route');
+	$columns = $db->getColumns('roles');
+	$builder = new CodeBuilder('Role', 'roles', $columns);
+	$builder->createFiles('datatables');
 	$this->comment('end ...');
 })->describe('philo blade test');

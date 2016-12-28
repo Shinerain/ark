@@ -48,12 +48,19 @@ class CodeBuilder
 			}
 			$ts = config('codebuilder.' . $group);
 			foreach ($ts as $viewName => $settings) {
-				$fileName = str_replace('{model}', $this->model, $settings['name_pattern']);
+				$name = $this->model;
 				if (!empty($settings['name_format']) && function_exists($settings['name_format'])) {
-					$fileName = call_user_func($settings['name_format'], $fileName);
+					$name = call_user_func($settings['name_format'], $this->model);
 				}
-				$filePath = $settings['path'] . DIRECTORY_SEPARATOR . $fileName;
-				$content = $this->blade->view()->make($viewName, $data)->render();
+				//var_dump($settings);
+				$dir = str_replace('{model}', $name, $settings['path']);
+				if(!is_dir($dir)){
+					mkdir($dir);
+				}
+				$fileName = str_replace('{model}', $this->model, $settings['name_pattern']);
+
+				$filePath = $dir . DIRECTORY_SEPARATOR . $fileName;
+				$content = $this->blade->view()->make($group . '.' . $viewName, $data)->render();
 				file_put_contents($filePath, $content);
 			}
 		}

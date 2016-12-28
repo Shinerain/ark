@@ -1,7 +1,12 @@
 @extends('layout.collapsed-sidebar')
 
 @section('styles')
-    <link rel="stylesheet" href="/asset/AdminLTE-2.3.7/plugins/datatables/dataTables.bootstrap.css" />
+
+    <link rel="stylesheet" href="/asset/datatable/css/dataTables.bootstrap.css" />
+    <link rel="stylesheet" href="/asset/datatable/extensions/Buttons/css/buttons.bootstrap.css" />
+    <link rel="stylesheet" href="/asset/datatable/extensions/Select/css/select.bootstrap.css" />
+    <link rel="stylesheet" href="/asset/datatable/extensions/Editor/css/editor.bootstrap.css" />
+
 @endsection
 
 @section('content')
@@ -9,12 +14,12 @@
     <section class="content-header">
         <h1>
             系统管理
-            <small>数据库表管理</small>
+            <small>数据表管理</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li><a href="#">系统管理</a></li>
-            <li class="active">数据库表管理</li>
+            <li class="active">数据表管理</li>
         </ol>
     </section>
 
@@ -24,50 +29,23 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">数据库表列表</h3>
+                        <h3 class="box-title">数据表列表</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <div class="margin">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-success"><i class="fa fa-pencil"></i> 新增</button>
-                            </div>
-                        </div>
 
-                        <table id="table" class="table table-bordered table-hover">
+                        <table id="moduleTable" class="table table-bordered table-hover">
                             <thead>
-                            <tr>
-                                <th>行号</th>
-                                <th>名称</th>
-                                <th>描述</th>
-                                <th>图标</th>
-                                <th>创建时间</th>
-                                <th>修改时间</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php $i =1; ?>
-                            @forelse($tables as $m)
                                 <tr>
-                                    <td>{{$i++}}</td>
-                                    <td>{{$m->name}}</td>
-                                    <td>{{$m->desc}}</td>
-                                    <td><span class="{{$m->icon}}"></span></td>
-                                    <td>{{$m->created_at}}</td>
-                                    <td>{{$m->updated_at}}</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
-                                            <button type="button" class="btn bg-purple"><i class="fa fa-navicon"></i></button>
-                                            <button type="button" class="btn btn-danger"><i class="fa fa-close"></i></button>
-                                        </div>
-                                    </td>
+                                    <th>id</th>
+                                    <th>sys_module_id</th>
+                                    <th>name</th>
+                                    <th>desc</th>
+                                    <th>icon</th>
+                                    <th>创建时间</th>
+                                    <th>修改时间</th>
                                 </tr>
-                                @empty
-                            @endforelse
-                            </tbody>
-
+                            </thead>
                         </table>
                     </div>
                     <!-- /.box-body -->
@@ -78,21 +56,71 @@
         </div>
         <!-- /.row -->
     </section>
-
+    <form id="delForm" action="" method="post">
+        {!! csrf_field() !!}
+        {!! method_field('DELETE') !!}
+    </form>
 @endsection
 
 @section('js')
-    <script src="/asset/AdminLTE-2.3.7/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="/asset/AdminLTE-2.3.7/plugins/datatables/dataTables.bootstrap.min.js"></script>
+    <script src="/asset/datatable/js/jquery.dataTables.js"></script>
+    <script src="/asset/datatable/js/dataTables.bootstrap.js"></script>
+    <script src="/asset/datatable/extensions/Buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/asset/datatable/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
+    <script src="/asset/datatable/extensions/Select/js/dataTables.select.min.js"></script>
+    <script src="/asset/datatable/extensions/Editor/js/dataTables.editor.js"></script>
+    <script src="/asset/datatable/extensions/Editor/js/editor.bootstrap.js"></script>
+
+    <script src="/asset/datatable/js/pipeline.js"></script>
+    <script src="/asset/datatable/js/zh_CN.js"></script>
     <script src="/asset/AdminLTE-2.3.7/dist/js/demo.js"></script>
     <script type="text/javascript">
-        $("#table").DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false
+
+        var table;
+        $(function () {
+
+            table = $("#moduleTable").DataTable({
+                dom: "Bfrtip",
+                language: zhCN,
+                processing: true,
+                serverSide: true,
+                select: true,
+                paging: true,
+                ajax: $.fn.dataTable.pipeline({
+                    url: '/admin/sys-table/pagination',
+                    pages: 5
+                }),
+                columns: [
+                    { "data": "id" },
+                    { "data": "sys_module_id" },
+                    { "data": "name" },
+                    { "data": "desc" },
+                    { "data": "icon" },
+                    { "data": "created_at" },
+                    { "data": "updated_at" },
+                ],
+                buttons: [
+                    { extend: "create", text: '新增', action: function ( e, dt, node, config ) {
+                         window.location.href = '{{route('sys-table.create')}}';
+                    } },
+                    { extend: "edit", text: '编辑', action: function ( e, dt, node, config ) {
+                        var data = dt.row().data();
+                        //console.info(data);
+                        var id = data.id;
+                        //alert(id);
+                        window.location.href = '/admin/sys-table/' + id + '/edit';
+                    } },
+                    { extend: "remove", text: '删除', action: function ( e, dt, node, config ) {
+                        var data = dt.row().data();
+                        var id = data.id;
+                        var url =  '/admin/sys-table/' + id;
+                        $('#delForm').attr('action', url);
+                        $('#delForm').submit();
+                    } }
+                ]
+            });
+
         });
+
     </script>
 @endsection

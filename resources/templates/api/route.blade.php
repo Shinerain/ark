@@ -88,7 +88,7 @@ Route::group(['prefix' => '{{snake_case($model,'-')}}'], function () {
     *  )
     * )
     */
-    Route::post('/{id}', ['as' => '{{$model}}.update', 'uses' => '{{$model}}Controller@update']);
+    Route::put('/{id}', ['as' => '{{$model}}.update', 'uses' => '{{$model}}Controller@update']);
 
     /**
     * @SWG\Api(

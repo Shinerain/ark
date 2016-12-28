@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\SysDic;
 use App\Models\SysTable;
+use App\Models\SysModule;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -15,30 +17,8 @@ class SysTableController extends Controller
      */
     public function index()
     {
-        //
-	    $data = SysTable::all();
-	    return view('sys-table.index')->withTables($data);
-    }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
+	    return view('sys-table.index');
     }
 
     /**
@@ -52,37 +32,122 @@ class SysTableController extends Controller
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+	/**
+	 * Show the form for creating a new resource.
+	 *
+	 * @return \Illuminate\Http\Response
+	 */
+	public function create()
+	{
+		//
+		$modules =  SysModule::query()->select('id', 'name')->get();
+		$icons = SysDic::where('category', 'icon')->get();
+		return view('sys-table.create', ['icons' => $icons, 'modules' => $modules]);
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+	/**
+	 * Store a newly created resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function store(Request $request)
+	{
+		//
+	    $data = $request->all();
+	    unset($data['_token']);
+	    $entity = SysTable::create($data);
+	    $this->flash_success('store success!');
+		return redirect(route('sys-table.index'));
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
+	/**
+	 * Display the specified resource.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function edit($id)
+	{
+		//
+		$entity = SysTable::find($id);
+		$icons = SysDic::where('category', 'icon')->get();
+		$modules =  SysModule::query()->select('id', 'name')->get();
+		return view('sys-table.edit', ['entity' => $entity, 'icons' => $icons, 'modules' => $modules]);
+	}
+
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id)
+	{
+		//
+		$entity = SysTable::find($id);
+		$data = $request->all();
+		unset($data['_token']);
+		$entity->fill($data);
+		$re = $entity->save();
+		$this->flash_success('update success!');
+		return redirect(route('sys-table.index'));
+	}
+
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+		//
+		$entity = SysTable::find($id);
+		$re = $entity->delete();
+		$this->flash_success('destroy success!');
+		return redirect(route('sys-table.index'));
+
+	}
+
+
+	public function pagination(Request $request){
+		//$data = $request->all();
+		$start =  $request->input('start', 0);
+		$length = $request->input('length', 10);
+		$columns = $request->input('columns',[]);
+		$order = $request->input('order', []);
+		$search = $request->input('search', []);
+		$draw = $request->input('draw', 0);
+
+		$queryBuilder = SysTable::query();
+		$fields = [];
+		$conditions = [];
+		foreach ($columns as $column){
+			$fields[] = $column['data'];
+			if(!empty($column['search']['value'])){
+				$conditions[$column['data']] = $column['search']['value'];
+			}
+		}
+		$total = $queryBuilder->count();
+
+		foreach ($conditions as $col => $val) {
+			$queryBuilder->where($col, $val);
+		}
+		foreach ($order as $o){
+			$index = $o['column'];
+			$dir = $o['dir'];
+			$queryBuilder->orderBy($columns[$index]['data'], $dir);
+		}
+		$entities = $queryBuilder->select($fields)->skip($start)->take($length)->get();
+		$result = [
+			'draw' => $draw,
+			'recordsTotal' => $total,
+			'recordsFiltered' => $total,
+			'data' => $entities
+		];
+		return response()->json($result);
+	}
+
 }

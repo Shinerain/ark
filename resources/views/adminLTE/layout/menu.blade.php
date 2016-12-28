@@ -43,7 +43,7 @@
                     <i class="fa fa-users"></i>
                     <span>用户权限管理</span>
                     <span class="pull-right-container">
-                      <span class="label label-primary pull-right">3</span>
+                      <span class="label label-primary pull-right">4</span>
                     </span>
                 </a>
                 <ul class="treeview-menu">
@@ -58,7 +58,7 @@
                     <i class="fa fa-anchor"></i>
                     <span>系统管理</span>
                     <span class="pull-right-container">
-                      <span class="label label-primary pull-right">3</span>
+                      <span class="label label-primary pull-right">4</span>
                     </span>
                 </a>
                 <ul class="treeview-menu">

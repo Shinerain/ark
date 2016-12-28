@@ -1,28 +1,47 @@
-@extends('layout.collapsed-sidebar')
+<?php
 
-@section('styles')
-    {{--<link rel="stylesheet" href="/asset/datatable/css/jquery.dataTables.min.css" />--}}
+        function exclude($column){
+        	$arr = ['id', 'created_at', 'updated_at'];
+        	return in_array($column->name , $arr);
+        }
+
+function showEditorType($column){
+
+	if(empty($column))
+		return '';
+
+	switch ($column->name){
+        case 'created_at':
+        case 'updated_at':
+            return "'type':'datetime'";
+
+    }
+}
+?>
+
+
+<?php echo "@extends('layout.collapsed-sidebar')"; ?>
+
+<?php echo  "@section('styles')" ; ?>
+
     <link rel="stylesheet" href="/asset/datatable/css/dataTables.bootstrap.css" />
-    {{--<link rel="stylesheet" href="/asset/datatable/extensions/Buttons/css/buttons.dataTables.css" />--}}
     <link rel="stylesheet" href="/asset/datatable/extensions/Buttons/css/buttons.bootstrap.css" />
-    {{--<link rel="stylesheet" href="/asset/datatable/extensions/Select/css/select.dataTables.css" />--}}
     <link rel="stylesheet" href="/asset/datatable/extensions/Select/css/select.bootstrap.css" />
-    {{--<link rel="stylesheet" href="/asset/datatable/extensions/Editor/css/editor.dataTables.css" />--}}
     <link rel="stylesheet" href="/asset/datatable/extensions/Editor/css/editor.bootstrap.css" />
+<?php echo  "@endsection" ; ?>
 
-@endsection
+<?php echo  "@section('content')" ; ?>
 
-@section('content')
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            系统管理
-            <small>模块管理</small>
+            {{$topModule or 'top module'}}
+            <small>{{$table}}</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">系统管理</a></li>
-            <li class="active">模块管理</li>
+            <li><a href="#">{{$topModule or 'top module'}}</a></li>
+            <li class="active">{{$table}}</li>
         </ol>
     </section>
 
@@ -32,22 +51,19 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">模块列表</h3>
+                        <h3 class="box-title">{{$table}}列表</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
 
                         <table id="moduleTable" class="table table-bordered table-hover">
                             <thead>
-                                <tr>
-                                    <th>id</th>
-                                    <th>名称</th>
-                                    <th>描述</th>
-                                    <th>图标</th>
-                                    <th>排序</th>
-                                    <th>创建时间</th>
-                                    <th>修改时间</th>
-                                </tr>
+                            <tr>
+                @forelse($columns as $col)
+                <th>{{$col->name}}</th>
+                @empty
+                @endforelse
+            </tr>
                             </thead>
                         </table>
                     </div>
@@ -60,9 +76,9 @@
         <!-- /.row -->
     </section>
 
-@endsection
+<?php echo "@endsection"  ; ?>
 
-@section('js')
+<?php echo "@section('js')"  ; ?>
     <script src="/asset/datatable/js/jquery.dataTables.js"></script>
     <script src="/asset/datatable/js/dataTables.bootstrap.js"></script>
     <script src="/asset/datatable/extensions/Buttons/js/dataTables.buttons.min.js"></script>
@@ -83,44 +99,30 @@
                 ajax: {
                     create: {
                         type: 'POST',
-                        url:  '/admin/sys-module',
+                        url:  '/admin/{{snake_case($model,'-')}}',
                         data: { _token: $('meta[name="_token"]').attr('content') }
                     },
                     edit: {
                         type: 'PUT',
-                        url:  '/admin/sys-module/_id_',
+                        url:  '/admin/{{snake_case($model,'-')}}/_id_',
                         data: { _token: $('meta[name="_token"]').attr('content') }
                     },
                     remove: {
                         type: 'DELETE',
-                        url:  '/admin/sys-module/_id_',
+                        url:  '/admin/{{snake_case($model,'-')}}/_id_',
                         data: { _token: $('meta[name="_token"]').attr('content') }
                     }
                 },
                 table: "#moduleTable",
                 idSrc:  'id',
-                fields: [ {
-                    label: "name:",
-                    name: "name"
-                }, {
-                    label: "desc:",
-                    name: "desc"
-                }, {
-                    label: "icon:",
-                    name: "icon"
-                }, {
-                    label: "sort:",
-                    name: "sort"
-                }, {
-                    label: "created_at date:",
-                    name: "created_at",
-                    type: "datetime"
-                }, {
-                    label: "updated_at date:",
-                    name: "updated_at",
-                    type: "datetime"
-                },
-                ]
+                fields: [
+            @forelse($columns as $col)
+@if(!exclude($col))
+    { 'label':  '{{$col->display}}', 'name': '{{$col->name}}',<?=showEditorType($col)?> },
+@endif
+            @empty
+            @endforelse
+            ]
             } );
             editor.on('postCreate', function (e, json, data) {
                 reload();
@@ -146,26 +148,23 @@
                 select: true,
                 paging: true,
                 ajax: $.fn.dataTable.pipeline({
-                    url: '/admin/sys-module/pagination',
+                    url: '/admin/{{snake_case($model,'-')}}/pagination',
                     pages: 5
                 }),
                 columns: [
-                    { "data": "id" },
-                    { "data": "name" },
-                    { "data": "desc" },
-                    { "data": "icon" },
-                    { "data": "sort" },
-                    { "data": "created_at" },
-                    { "data": "updated_at" },
-                ],
+            @forelse($columns as $col)
+            {  'data': '{{$col->name}}' },
+            @empty
+            @endforelse
+            ],
                 buttons: [
-                    { extend: "create", editor: editor },
-                    { extend: "edit",   editor: editor },
-                    { extend: "remove", editor: editor }
+                    { extend: "create", text: '新增', editor: editor },
+                    { extend: "edit", text: '编辑',  editor: editor },
+                    { extend: "remove", text: '删除', editor: editor }
                 ]
             });
 
         });
 
     </script>
-@endsection
+<?php echo "@endsection"  ; ?>

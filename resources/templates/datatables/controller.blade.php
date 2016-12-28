@@ -1,39 +1,39 @@
-<?php
+{!! $BEGIN_PHP !!}
 
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Models\Role;
+use App\Models\{{$model}};
 
-class RoleController extends BaseController
+class {{$model}}Controller extends BaseController
 {
 	/**
 	* Display a listing of the resource.
 	*
-	* @return  \Illuminate\Http\Response
+	* @return \Illuminate\Http\Response
 	*/
 	public function index()
 	{
 		//
-		return view('role.index');
+		return view('{{snake_case($model,'-')}}.index');
 	}
 
 	/**
 	* Show the form for creating a new resource.
 	*
-	* @return  \Illuminate\Http\Response
+	* @return \Illuminate\Http\Response
 	*/
 	public function create()
 	{
-		return view('role.create');
+		return view('{{snake_case($model,'-')}}.create');
 	}
 
 	/**
 	* Store a newly created resource in storage.
 	*
-	* @param    \Illuminate\Http\Request  $request
-	* @return  \Illuminate\Http\Response
+	* @param  \Illuminate\Http\Request  $request
+	* @return \Illuminate\Http\Response
 	*/
 	public function store(Request $request)
 	{
@@ -42,29 +42,29 @@ class RoleController extends BaseController
 			return response()->json(['data' => []]);
 
 		$props = current($data);
-		$entity = Role::create($props);
+		$entity = {{$model}}::create($props);
 		return response()->json($this->success([$entity]));
 	}
 
 	/**
 	* Display the specified resource.
 	*
-	* @param    int  $id
-	* @return  \Illuminate\Http\Response
+	* @param  int  $id
+	* @return \Illuminate\Http\Response
 	*/
 	public function edit($id)
 	{
-		$entity = Role::find($id);
-		return view('role.edit', ['entity' => $entity]);
+		$entity = {{$model}}::find($id);
+		return view('{{snake_case($model,'-')}}.edit', ['entity' => $entity]);
 	}
 
 
 	/**
 	* Update the specified resource in storage.
 	*
-	* @param    \Illuminate\Http\Request  $request
-	* @param    int  $id
-	* @return  \Illuminate\Http\Response
+	* @param  \Illuminate\Http\Request  $request
+	* @param  int  $id
+	* @return \Illuminate\Http\Response
 	*/
 	public function update(Request $request, $id)
 	{
@@ -73,7 +73,7 @@ class RoleController extends BaseController
 			return response()->json(['data' => []]);
 
 		$props = current($data);
-		$entity = Role::find($id);
+		$entity = {{$model}}::find($id);
 		$entity->fill($props);
 		$entity->save();
 		return response()->json($this->success([$entity]));
@@ -82,8 +82,8 @@ class RoleController extends BaseController
 	/**
 	* Display the specified resource.
 	*
-	* @param    int  $id
-	* @return  \Illuminate\Http\Response
+	* @param  int  $id
+	* @return \Illuminate\Http\Response
 	*/
 	public function show($id)
 	{
@@ -93,12 +93,12 @@ class RoleController extends BaseController
 	/**
 	* Remove the specified resource from storage.
 	*
-	* @param    int  $id
-	* @return  \Illuminate\Http\Response
+	* @param  int  $id
+	* @return \Illuminate\Http\Response
 	*/
 	public function destroy($id)
 	{
-		$entity = Role::find($id);
+		$entity = {{$model}}::find($id);
 		$entity->delete();
 		return response()->json($this->success([]));
 	}
@@ -112,7 +112,7 @@ class RoleController extends BaseController
 		$search = $request->input('search', []);
 		$draw = $request->input('draw', 0);
 
-		$queryBuilder = Role::query();
+		$queryBuilder = {{$model}}::query();
 		$fields = [];
 		$conditions = [];
 		foreach ($columns as $column){

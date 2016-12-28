@@ -1,6 +1,6 @@
-@extends('layout.collapsed-sidebar')
+{!! "@extends('layout.collapsed-sidebar')" !!}
 
-@section('styles')
+{!! "@section('styles')" !!}
     {{--<link rel="stylesheet" href="/asset/datatable/css/jquery.dataTables.min.css" />--}}
     <link rel="stylesheet" href="/asset/datatable/css/dataTables.bootstrap.css" />
     {{--<link rel="stylesheet" href="/asset/datatable/extensions/Buttons/css/buttons.dataTables.css" />--}}
@@ -10,9 +10,9 @@
     {{--<link rel="stylesheet" href="/asset/datatable/extensions/Editor/css/editor.dataTables.css" />--}}
     <link rel="stylesheet" href="/asset/datatable/extensions/Editor/css/editor.bootstrap.css" />
 
-@endsection
+{!! "@endsection" !!}
 
-@section('content')
+{!! "@section('content')" !!}
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
@@ -39,15 +39,15 @@
 
                         <table id="moduleTable" class="table table-bordered table-hover">
                             <thead>
-                                <tr>
-                                    <th>id</th>
-                                    <th>名称</th>
-                                    <th>描述</th>
-                                    <th>图标</th>
-                                    <th>排序</th>
-                                    <th>创建时间</th>
-                                    <th>修改时间</th>
-                                </tr>
+                            <tr>
+                                <th>id</th>
+                                <th>名称</th>
+                                <th>描述</th>
+                                <th>图标</th>
+                                <th>排序</th>
+                                <th>创建时间</th>
+                                <th>修改时间</th>
+                            </tr>
                             </thead>
                         </table>
                     </div>
@@ -60,9 +60,9 @@
         <!-- /.row -->
     </section>
 
-@endsection
+{!! "@endsection" !!}
 
-@section('js')
+{!! "@section('js')" !!}
     <script src="/asset/datatable/js/jquery.dataTables.js"></script>
     <script src="/asset/datatable/js/dataTables.bootstrap.js"></script>
     <script src="/asset/datatable/extensions/Buttons/js/dataTables.buttons.min.js"></script>
@@ -81,25 +81,16 @@
         $(function () {
             editor = new $.fn.dataTable.Editor( {
                 ajax: {
-                    create: {
-                        type: 'POST',
-                        url:  '/admin/sys-module',
-                        data: { _token: $('meta[name="_token"]').attr('content') }
-                    },
-                    edit: {
-                        type: 'PUT',
-                        url:  '/admin/sys-module/_id_',
-                        data: { _token: $('meta[name="_token"]').attr('content') }
-                    },
-                    remove: {
-                        type: 'DELETE',
-                        url:  '/admin/sys-module/_id_',
-                        data: { _token: $('meta[name="_token"]').attr('content') }
-                    }
+                    type: 'POST',
+                    url: "/admin/sys-module/action",
+                    data: { _token: $('meta[name="_token"]').attr('content') }
                 },
                 table: "#moduleTable",
                 idSrc:  'id',
                 fields: [ {
+                    label: "id:",
+                    name: "id"
+                }, {
                     label: "name:",
                     name: "name"
                 }, {
@@ -165,7 +156,29 @@
                 ]
             });
 
+            $('#moduleTable tbody').on( 'click', '.edit', function () {
+                var data = table.row( $(this).parents('tr') ).data();
+                var url='/admin/sys-module/'+data['id']+'/edit';
+                window.location.href=url;
+            } );
+
+            $('#moduleTable tbody').on( 'click', '.remove', function () {
+                var data = table.row( $(this).parents('tr') ).data();
+                var p = {
+                    _token: $('meta[name="_token"]').attr('content'),
+                    _method: 'DELETE'
+                };
+                layer.confirm('are you sure ?' , { btn: ['yes', 'no'] }, function () {
+                    //alert( data['id'] +" remove " );
+                    $.post('/admin/sys-module/'+ data['id'], p, function (re) {
+                        layer.msg('delete success!');
+                    });
+                }, function () {
+                    layer.close();
+                });
+            });
+
         });
 
     </script>
-@endsection
+{!! "@endsection" !!}

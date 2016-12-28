@@ -12,19 +12,22 @@ return [
 		'template_cache' =>  realpath(base_path('resources/templates/cache')),
 	],
 	//outputs groups
-	'outputs' => ['admin', 'api'],
+	'outputs' => ['datatables'],
 	//output group
 	//template name => output settings
 	'admin' => [
-		'model' => ['path' => realpath(app_path('Models')), 'name_pattern' => '{model}.php'],
-		'route' => ['path' => realpath(base_path('routes/api')), 'name_pattern' => '{model}.php', 'name_format' => 'strtolower'],
-		'controller' => ['path' => realpath(app_path('Http/Controllers/Api')), 'name_pattern' => '{model}Controller.php'],
-		'view' => ['path' => realpath(base_path('resources/views')), 'name_pattern' => '{model}.blade.php', 'name_format' => 'strtolower'],
+		'model' => ['path' => app_path('Models'), 'name_pattern' => '{model}.php'],
+		'route' => ['path' => base_path('routes/admin'), 'name_pattern' => '{model}.php', 'name_format' => 'strtolower'],
+		'controller' => ['path' => app_path('Http/Controllers/Admin'), 'name_pattern' => '{model}Controller.php'],
+		'view' => ['path' => base_path('resources/views'), 'name_pattern' => '{model}.blade.php', 'name_format' => 'strtolower'],
 	],
 	'api' => [
-		'model' => ['path' => realpath(app_path('Models')), 'name_pattern' => '{model}.php'],
-		'route' => ['path' => realpath(base_path('routes/api')), 'name_pattern' => '{model}.php', 'name_format' => 'strtolower'],
-		'controller' => ['path' => realpath(app_path('Http/Controllers/Api')), 'name_pattern' => '{model}Controller.php'],
-		'view' => ['path' => realpath(base_path('resources/views')), 'name_pattern' => '{model}.blade.php', 'name_format' => 'strtolower'],
-	]
+		'route' => ['path' => base_path('routes/api'), 'name_pattern' => '{model}.php', 'name_format' => 'strtolower'],
+		'controller' => ['path' => app_path('Http/Controllers/Api'), 'name_pattern' => '{model}Controller.php'],
+	],
+	'datatables' => [
+		'route' => ['path' => base_path('routes/admin'), 'name_pattern' => '{model}.php', 'name_format' => 'strtolower'],
+		'controller' => ['path' => app_path('Http/Controllers/Admin'), 'name_pattern' => '{model}Controller.php'],
+		'view_index' => ['path' => base_path('resources/views/adminLTE/{model}'), 'name_pattern' => 'index.blade.php', 'name_format' => 'strtolower'],
+	],
 ];
