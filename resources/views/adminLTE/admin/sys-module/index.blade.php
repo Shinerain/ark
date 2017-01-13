@@ -1,15 +1,7 @@
-@extends('layout.collapsed-sidebar')
+@extends('admin.layout.collapsed-sidebar')
 
 @section('styles')
-    {{--<link rel="stylesheet" href="/asset/datatable/css/jquery.dataTables.min.css" />--}}
-    <link rel="stylesheet" href="/asset/datatable/css/dataTables.bootstrap.css" />
-    {{--<link rel="stylesheet" href="/asset/datatable/extensions/Buttons/css/buttons.dataTables.css" />--}}
-    <link rel="stylesheet" href="/asset/datatable/extensions/Buttons/css/buttons.bootstrap.css" />
-    {{--<link rel="stylesheet" href="/asset/datatable/extensions/Select/css/select.dataTables.css" />--}}
-    <link rel="stylesheet" href="/asset/datatable/extensions/Select/css/select.bootstrap.css" />
-    {{--<link rel="stylesheet" href="/asset/datatable/extensions/Editor/css/editor.dataTables.css" />--}}
-    <link rel="stylesheet" href="/asset/datatable/extensions/Editor/css/editor.bootstrap.css" />
-
+    @include('admin.layout.datatable-css')
 @endsection
 
 @section('content')
@@ -63,26 +55,39 @@
 @endsection
 
 @section('js')
-    <script src="/asset/datatable/js/jquery.dataTables.js"></script>
-    <script src="/asset/datatable/js/dataTables.bootstrap.js"></script>
-    <script src="/asset/datatable/extensions/Buttons/js/dataTables.buttons.min.js"></script>
-    <script src="/asset/datatable/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
-    <script src="/asset/datatable/extensions/Select/js/dataTables.select.min.js"></script>
-    <script src="/asset/datatable/js/pipeline.js"></script>
-    <script src="/asset/datatable/js/zh_CN.js"></script>
-    <script src="/asset/AdminLTE-2.3.7/dist/js/demo.js"></script>
+    @include('admin.layout.datatable-js')
     <script type="text/javascript">
         var editor; // use a global for the submit and return data rendering in the examples
         var table;
 
         $(function () {
-
-            function reload() {
-                //editor.close();
-                setTimeout(function () {
-                    table.clearPipeline().draw();
-                }, 100);
-            }
+            var editor = new $.fn.dataTable.Editor({
+                ajax: {
+                    create: {
+                        type: 'POST',
+                        url: '/admin/sys-module',
+                        data: {_token: $('meta[name="_token"]').attr('content')},
+                    },
+                    edit: {
+                        type: 'PUT',
+                        url: '/admin/sys-module/_id_',
+                        data: {_token: $('meta[name="_token"]').attr('content')},
+                    },
+                    remove: {
+                        type: 'DELETE',
+                        url: '/admin/sys-module/_id_',
+                        data: {_token: $('meta[name="_token"]').attr('content')},
+                    }
+                },
+                table: "#moduleTable",
+                idSrc: 'id',
+                fields: [
+                    {'label': 'name', 'name': 'name',},
+                    {'label': 'display_name', 'name': 'display_name',},
+                    {'label': 'description', 'name': 'description',},
+                    {'label': 'icon', 'name': 'icon',},
+                ]
+            });
 
             table = $("#moduleTable").DataTable({
                 dom: "Bfrtip",
@@ -91,10 +96,7 @@
                 serverSide: true,
                 select: true,
                 paging: true,
-                ajax: $.fn.dataTable.pipeline({
-                    url: '/admin/sys-module/pagination',
-                    pages: 5
-                }),
+                ajax: '/admin/sys-module/pagination',
                 columns: [
                     { "data": "id" },
                     { "data": "name" },
@@ -111,21 +113,6 @@
                     { extend: "edit",   editor: editor },
                     { extend: "remove", editor: editor }
                 ],
-                initComplete: function(settings) {
-                    //alert(1);
-//                    var _$this = this;
-//                    var searchHTML = '<label><span>搜索:</span> <input type="search" placeholder="请输入搜索内容" aria-controls="datatable1"></label>';
-//                    //快捷操作的HTML DOM
-//                    $(_$this.selector + '_wrapper .dataTables_filter').append(searchHTML);
-//
-//                    //重写搜索事件
-//                    $(_$this.selector + '_wrapper .dataTables_filter input').bind('keyup',
-//                        function(e) {
-//                            if (e.keyCode == 13 || (e.keyCode == 8 && (this.value.length == 0))) {
-//                                _$this.api().search(this.value).draw();
-//                            }
-//                        });
-                }
             });
 
 

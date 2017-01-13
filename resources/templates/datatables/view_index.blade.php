@@ -1,33 +1,8 @@
-<?php
-
-        function exclude($column){
-        	$arr = ['id', 'created_at', 'updated_at'];
-        	return in_array($column->name , $arr);
-        }
-
-        function showEditorType($column){
-            if(empty($column))
-                return '';
-
-            switch ($column->name){
-                case 'created_at':
-                case 'updated_at':
-                    return "'type':'datetime'";
-            }
-        }
-?>
-
-
-<?php echo "@extends('layout.collapsed-sidebar')"; ?>
+<?php echo "@extends('admin.layout.collapsed-sidebar')"; ?>
 
 <?php echo  "@section('styles')" ; ?>
 
-    <link rel="stylesheet" href="/assets/plugins/datatables/css/dataTables.bootstrap.css" />
-    <link rel="stylesheet" href="/assets/plugins/datatables/extensions/Buttons/css/buttons.dataTables.css" />
-    <link rel="stylesheet" href="/assets/plugins/datatables/extensions/Buttons/css/buttons.bootstrap.css" />
-    <link rel="stylesheet" href="/assets/plugins/datatables/extensions/Select/css/select.dataTables.css" />
-    <link rel="stylesheet" href="/assets/plugins/datatables/extensions/Select/css/select.bootstrap.css" />
-    <link rel="stylesheet" href="/assets/plugins/datatables/extensions/Editor/css/editor.bootstrap.css" />
+    <?php echo  "@include('admin.layout.datatable-css')" ; ?>
 
 <?php echo  "@endsection" ; ?>
 
@@ -81,85 +56,15 @@
 <?php echo "@endsection"  ; ?>
 
 <?php echo "@section('js')"  ; ?>
-    <script src="/assets/plugins/datatables/js/jquery.dataTables.js"></script>
-    <script src="/assets/plugins/datatables/js/dataTables.bootstrap.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Buttons/js/dataTables.buttons.min.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Buttons/js/buttons.colVis.min.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Buttons/js/buttons.html5.min.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Buttons/js/buttons.print.min.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Buttons/js/buttons.flash.min.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Buttons/js/jszip.min.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Buttons/js/pdfmake.min.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Buttons/js/vfs_fonts.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Select/js/dataTables.select.min.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Editor/js/dataTables.editor.min.js"></script>
-    <script src="/assets/plugins/datatables/extensions/Editor/js/editor.bootstrap.min.js"></script>
-    <script src="/assets/plugins/datatables/js/pipeline.js"></script>
-    <script src="/assets/plugins/datatables/js/zh_CN.js"></script>
+
+    <?php echo "@include('admin.layout.datatable-js')"  ; ?>
 
     <script type="text/javascript">
-        var editor; // use a global for the submit and return data rendering in the examples
-        var table;
-
         $(function () {
-            editor = new $.fn.dataTable.Editor( {
-                ajax: {
-                    create: {
-                        type: 'POST',
-                        url:  '/admin/{{snake_case($model,'-')}}',
-                        data: { _token: $('meta[name="_token"]').attr('content') },
-                    },
-                    edit: {
-                        type: 'PUT',
-                        url:  '/admin/{{snake_case($model,'-')}}/_id_',
-                        data: { _token: $('meta[name="_token"]').attr('content') },
-                    },
-                    remove: {
-                        type: 'DELETE',
-                        url:  '/admin/{{snake_case($model,'-')}}/_id_',
-                        data: { _token: $('meta[name="_token"]').attr('content') },
-                    }
-                },
-                table: "#moduleTable",
-                idSrc:  'id',
-                fields: [
-            @forelse($columns as $col)
-@if(!exclude($col))
-    { 'label':  '{{$col->display}}', 'name': '{{$col->name}}',<?=showEditorType($col)?> },
-@endif
-            @empty
-            @endforelse
-            ]
-            } );
-
-            table = $("#moduleTable").DataTable({
-                dom: "Bfrtip",
-                language: zhCN,
-                processing: true,
-                serverSide: true,
-                select: true,
-                paging: true,
-                ajax: $.fn.dataTable.pipeline({
-                    url: '/admin/{{snake_case($model,'-')}}/pagination',
-                    pages: 5
-                }),
-                columns: [
-            @forelse($columns as $col)
-            {  'data': '{{$col->name}}' },
-            @empty
-            @endforelse
-            ],
-                buttons: [
-                    { extend: "create", text: '新增', editor: editor },
-                    { extend: "edit", text: '编辑',  editor: editor },
-                    { extend: "remove", text: '删除', editor: editor },
-                    { extend: 'excel', text: '导出Excel' },
-                    { extend: 'print', text: '打印' },
-                ]
+            seajs.use('admin/{{snake_case($model)}}.js', function (app) {
+                app.index($, 'moduleTable');
             });
-
         });
-
     </script>
+
 <?php echo "@endsection"  ; ?>

@@ -19,3 +19,10 @@ if(!function_exists('load_routes')) {
 	}
 
 }
+
+if(!function_exists('snake_case2')){
+
+	function snake_case2($str){
+		return snake_case($str, '-');
+	}
+}

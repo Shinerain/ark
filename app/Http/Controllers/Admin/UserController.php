@@ -21,7 +21,7 @@ class UserController extends DataTableController
 	public function index()
 	{
 		//
-		return view('user.index');
+		return view('admin.user.index');
 	}
 
 	/**
@@ -31,7 +31,7 @@ class UserController extends DataTableController
 	*/
 	public function create()
 	{
-		return view('user.create');
+		return view('admin.user.create');
 	}
 
 	/**
@@ -43,7 +43,7 @@ class UserController extends DataTableController
 	public function edit($id)
 	{
 		$entity = User::find($id);
-		return view('user.edit', ['entity' => $entity]);
+		return view('admin.user.edit', ['entity' => $entity]);
 	}
 
 	/**

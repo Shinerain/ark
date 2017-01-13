@@ -31,7 +31,7 @@ class <?php echo e($model); ?>Controller extends DataTableController
 	public function index()
 	{
 		//
-		return view('<?php echo e(snake_case($model,'-')); ?>.index');
+		return view('admin.<?php echo e(snake_case($model,'-')); ?>.index');
 	}
 
 	/**
@@ -41,7 +41,7 @@ class <?php echo e($model); ?>Controller extends DataTableController
 	*/
 	public function create()
 	{
-		return view('<?php echo e(snake_case($model,'-')); ?>.create');
+		return view('admin.<?php echo e(snake_case($model,'-')); ?>.create');
 	}
 
 	/**
@@ -53,7 +53,7 @@ class <?php echo e($model); ?>Controller extends DataTableController
 	public function edit($id)
 	{
 		$entity = <?php echo e($model); ?>::find($id);
-		return view('<?php echo e(snake_case($model,'-')); ?>.edit', ['entity' => $entity]);
+		return view('admin.<?php echo e(snake_case($model,'-')); ?>.edit', ['entity' => $entity]);
 	}
 
 	/**
