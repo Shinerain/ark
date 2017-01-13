@@ -16,9 +16,12 @@ class CreateTableSysModules extends Migration
         //
 	    Schema::create('sys_modules', function (Blueprint $table) {
 		    $table->increments('id');
+		    $table->integer('pid')->default(0)->comment('parent id');
 		    $table->string('name')->default('')->comment('模块名称');
 		    $table->string('desc')->default('')->comment('模块描述');
 		    $table->string('icon')->default('')->comment('icon');
+		    $table->integer('is_page')->default(0)->comment('是否功能页');
+		    $table->string('url')->default('')->comment('链接地址');
 		    $table->integer('sort')->default(0)->comment('排序');
 		    $table->timestamps();
 	    });

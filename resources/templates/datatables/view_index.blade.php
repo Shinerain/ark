@@ -5,18 +5,16 @@
         	return in_array($column->name , $arr);
         }
 
-function showEditorType($column){
+        function showEditorType($column){
+            if(empty($column))
+                return '';
 
-	if(empty($column))
-		return '';
-
-	switch ($column->name){
-        case 'created_at':
-        case 'updated_at':
-            return "'type':'datetime'";
-
-    }
-}
+            switch ($column->name){
+                case 'created_at':
+                case 'updated_at':
+                    return "'type':'datetime'";
+            }
+        }
 ?>
 
 
@@ -24,11 +22,15 @@ function showEditorType($column){
 
 <?php echo  "@section('styles')" ; ?>
 
-    <link rel="stylesheet" href="/asset/datatable/css/dataTables.bootstrap.css" />
-    <link rel="stylesheet" href="/asset/datatable/extensions/Buttons/css/buttons.bootstrap.css" />
-    <link rel="stylesheet" href="/asset/datatable/extensions/Select/css/select.bootstrap.css" />
-    <link rel="stylesheet" href="/asset/datatable/extensions/Editor/css/editor.bootstrap.css" />
+    <link rel="stylesheet" href="/assets/plugins/datatables/css/dataTables.bootstrap.css" />
+    <link rel="stylesheet" href="/assets/plugins/datatables/extensions/Buttons/css/buttons.dataTables.css" />
+    <link rel="stylesheet" href="/assets/plugins/datatables/extensions/Buttons/css/buttons.bootstrap.css" />
+    <link rel="stylesheet" href="/assets/plugins/datatables/extensions/Select/css/select.dataTables.css" />
+    <link rel="stylesheet" href="/assets/plugins/datatables/extensions/Select/css/select.bootstrap.css" />
+    <link rel="stylesheet" href="/assets/plugins/datatables/extensions/Editor/css/editor.bootstrap.css" />
+
 <?php echo  "@endsection" ; ?>
+
 
 <?php echo  "@section('content')" ; ?>
 
@@ -79,17 +81,23 @@ function showEditorType($column){
 <?php echo "@endsection"  ; ?>
 
 <?php echo "@section('js')"  ; ?>
-    <script src="/asset/datatable/js/jquery.dataTables.js"></script>
-    <script src="/asset/datatable/js/dataTables.bootstrap.js"></script>
-    <script src="/asset/datatable/extensions/Buttons/js/dataTables.buttons.min.js"></script>
-    <script src="/asset/datatable/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
-    <script src="/asset/datatable/extensions/Select/js/dataTables.select.min.js"></script>
-    <script src="/asset/datatable/extensions/Editor/js/dataTables.editor.js"></script>
-    <script src="/asset/datatable/extensions/Editor/js/editor.bootstrap.js"></script>
+    <script src="/assets/plugins/datatables/js/jquery.dataTables.js"></script>
+    <script src="/assets/plugins/datatables/js/dataTables.bootstrap.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Buttons/js/dataTables.buttons.min.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Buttons/js/buttons.bootstrap.min.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Buttons/js/buttons.colVis.min.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Buttons/js/buttons.html5.min.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Buttons/js/buttons.print.min.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Buttons/js/buttons.flash.min.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Buttons/js/jszip.min.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Buttons/js/pdfmake.min.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Buttons/js/vfs_fonts.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Select/js/dataTables.select.min.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Editor/js/dataTables.editor.min.js"></script>
+    <script src="/assets/plugins/datatables/extensions/Editor/js/editor.bootstrap.min.js"></script>
+    <script src="/assets/plugins/datatables/js/pipeline.js"></script>
+    <script src="/assets/plugins/datatables/js/zh_CN.js"></script>
 
-    <script src="/asset/datatable/js/pipeline.js"></script>
-    <script src="/asset/datatable/js/zh_CN.js"></script>
-    <script src="/asset/AdminLTE-2.3.7/dist/js/demo.js"></script>
     <script type="text/javascript">
         var editor; // use a global for the submit and return data rendering in the examples
         var table;
@@ -100,17 +108,17 @@ function showEditorType($column){
                     create: {
                         type: 'POST',
                         url:  '/admin/{{snake_case($model,'-')}}',
-                        data: { _token: $('meta[name="_token"]').attr('content') }
+                        data: { _token: $('meta[name="_token"]').attr('content') },
                     },
                     edit: {
                         type: 'PUT',
                         url:  '/admin/{{snake_case($model,'-')}}/_id_',
-                        data: { _token: $('meta[name="_token"]').attr('content') }
+                        data: { _token: $('meta[name="_token"]').attr('content') },
                     },
                     remove: {
                         type: 'DELETE',
                         url:  '/admin/{{snake_case($model,'-')}}/_id_',
-                        data: { _token: $('meta[name="_token"]').attr('content') }
+                        data: { _token: $('meta[name="_token"]').attr('content') },
                     }
                 },
                 table: "#moduleTable",
@@ -124,21 +132,6 @@ function showEditorType($column){
             @endforelse
             ]
             } );
-            editor.on('postCreate', function (e, json, data) {
-                reload();
-            });
-            editor.on('postEdit', function (e, json, data) {
-                reload();
-            });
-            editor.on('postRemove', function (e, json, data) {
-                reload();
-            });
-
-            function reload() {
-                setTimeout(function () {
-                    table.clearPipeline().draw();
-                }, 100);
-            }
 
             table = $("#moduleTable").DataTable({
                 dom: "Bfrtip",
@@ -160,7 +153,9 @@ function showEditorType($column){
                 buttons: [
                     { extend: "create", text: '新增', editor: editor },
                     { extend: "edit", text: '编辑',  editor: editor },
-                    { extend: "remove", text: '删除', editor: editor }
+                    { extend: "remove", text: '删除', editor: editor },
+                    { extend: 'excel', text: '导出Excel' },
+                    { extend: 'print', text: '打印' },
                 ]
             });
 

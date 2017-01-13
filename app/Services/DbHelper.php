@@ -9,6 +9,7 @@
 namespace App\Services;
 use PDO;
 use App\Models\SysColumn;
+use App\Models\SysTable;
 
 class DbHelper{
 
@@ -29,6 +30,24 @@ class DbHelper{
 		$pwd = config('database.connections.' . $this->driver . '.password');
 
 		return new PDO("$this->driver:host=$this->host;dbname=$this->schemaDb;charset=utf8", $user, $pwd);
+	}
+
+	public function getTables(){
+		$conn = $this->getConn();
+		$db = $this->db;
+		$query = "SELECT * FROM `TABLES` WHERE TABLE_SCHEMA='$db' ";
+		$rows = $conn->query($query);
+		$tables = [];
+		foreach ($rows as $row){
+			$table = [
+				'name' => $row['TABLE_NAME'],
+				'desc' => $row['TABLE_NAME'],
+				'model_name' => studly_case($row['TABLE_NAME']),
+				'engine' => $row['ENGINE']
+			];
+			$tables[] = new SysTable($table);
+		}
+		return $tables;
 	}
 
 	public function getColumns($table){
