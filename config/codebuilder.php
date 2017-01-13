@@ -28,7 +28,7 @@ return [
 	'datatables' => [
 		'route' => ['path' => base_path('routes/admin'), 'name_pattern' => '{model}.php', 'name_format' => 'strtolower'],
 		'controller' => ['path' => app_path('Http/Controllers/Admin'), 'name_pattern' => '{model}Controller.php'],
-		'view_index' => ['path' => base_path('resources/views/adminLTE/admin/{model}'), 'name_pattern' => 'index.blade.php', 'name_format' => 'strtolower'],
+		'view_index' => ['path' => base_path('resources/views/adminLTE/admin/{model}'), 'name_pattern' => 'index.blade.php', 'name_format' => 'snake_case2'],
 		'js' => ['path' => base_path('public/assets/admin'), 'name_pattern' => '{model}.js', 'name_format' => 'snake_case'],
 	],
 ];

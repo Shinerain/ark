@@ -57,7 +57,7 @@ class CodeBuilder
 				if(!is_dir($dir)){
 					mkdir($dir);
 				}
-				$fileName = str_replace('{model}', $this->model, $settings['name_pattern']);
+				$fileName = str_replace('{model}', $name, $settings['name_pattern']);
 
 				$filePath = $dir . DIRECTORY_SEPARATOR . $fileName;
 				$content = $this->blade->view()->make($group . '.' . $viewName, $data)->render();
