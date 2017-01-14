@@ -28,3 +28,12 @@ Artisan::command('test', function () {
 	$builder->createFiles('datatables');
 	$this->comment('end ...');
 })->describe('philo blade test');
+
+Artisan::command('test', function () {
+	$this->comment('begin ...');
+	$db = new DbHelper();
+	$columns = $db->getColumns('users');
+	$builder = new CodeBuilder('User', 'users', $columns);
+	$builder->createFiles('api');
+	$this->comment('end ...');
+})->describe('philo blade test');
