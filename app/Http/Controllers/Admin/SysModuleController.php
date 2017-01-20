@@ -18,7 +18,11 @@ class SysModuleController extends DataTableController
     public function index()
     {
         //
-	    $data = SysModule::all();
+	    $entities = SysModule::where('pid', 0)->get();
+	    $data = $entities->map(function ($entity){
+	    	return $this->toBootstrapTreeViewData($entity, ['text' => 'name', 'data-id' => 'id']);
+	    });
+
 	    return view('admin.sys-module.index')->withModules($data);
     }
 
@@ -177,4 +181,29 @@ class SysModuleController extends DataTableController
 	public function action(){
 		return parent::success([]);
 	}
+
+	/**
+	 * 将实体数据转换成树形（bootstrap treeview）数据
+	 * @param $entity
+	 * @param $props 属性映射集合 ['text' => 'name', 'data-id' => 'id']
+	 * @return array
+	 */
+	public function toBootstrapTreeViewData($entity, $props){
+		$data = [];
+		if(!empty($entity)){
+			foreach ($props as $k => $val){
+				$data[$k] = $entity->{$val};
+			}
+			if(!empty($entity->children)){
+				$nodes = [];
+				foreach ($entity->children as $child){
+					$nodes[] = $this->toBootstrapTreeViewData($child, $props);
+				}
+				if(!empty($nodes))
+					$data['nodes'] = $nodes;
+			}
+		}
+		return $data;
+	}
+
 }

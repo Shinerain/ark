@@ -50,5 +50,5 @@
 @endsection
 
 @section('js')
-    <script src="/asset/AdminLTE-2.3.7/dist/js/demo.js"></script>
+    <script src="/assets/plugins/AdminLTE/dist/js/demo.js"></script>
 @endsection

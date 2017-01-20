@@ -5,7 +5,7 @@
         <!-- Sidebar user panel -->
         <div class="user-panel">
             <div class="pull-left image">
-                <img src="/asset/AdminLTE-2.3.7/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
+                <img src="/assets/plugins/AdminLTE/dist/img/user2-160x160.jpg" class="img-circle" alt="User Image">
             </div>
             <div class="pull-left info">
                 <p>Alexander Pierce</p>
@@ -34,8 +34,8 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="/asset/AdminLTE-2.3.7/index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
-                    <li><a href="/asset/AdminLTE-2.3.7/index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
+                    <li><a href="/assets/plugins/AdminLTE/index.html"><i class="fa fa-circle-o"></i> Dashboard v1</a></li>
+                    <li><a href="/assets/plugins/AdminLTE/index2.html"><i class="fa fa-circle-o"></i> Dashboard v2</a></li>
                 </ul>
             </li>
             <li class="treeview active">

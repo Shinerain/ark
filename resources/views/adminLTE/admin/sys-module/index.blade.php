@@ -2,6 +2,7 @@
 
 @section('styles')
     @include('admin.layout.datatable-css')
+    <link type="text/css" href="/assets/plugins/bootstrap-treeview/bootstrap-treeview.min.css" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -21,7 +22,24 @@
     <!-- Main content -->
     <section class="content">
         <div class="row">
-            <div class="col-xs-12">
+            <div class="col-xs-3">
+                <div class="box">
+                    <div class="box-header">
+                        <h3 class="box-title">模块树</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body" >
+                        <div id="moduleTree"></div>
+                    </div>
+                    <!-- /.box-body -->
+                </div>
+                <!-- /.box -->
+            </div>
+            <div class="col-xs-9">
                 <div class="box">
                     <div class="box-header">
                         <h3 class="box-title">模块列表</h3>
@@ -56,67 +74,13 @@
 
 @section('js')
     @include('admin.layout.datatable-js')
+    <script type="text/javascript" src="/assets/plugins/bootstrap-treeview/bootstrap-treeview.min.js"></script>
     <script type="text/javascript">
-        var editor; // use a global for the submit and return data rendering in the examples
-        var table;
-
         $(function () {
-            var editor = new $.fn.dataTable.Editor({
-                ajax: {
-                    create: {
-                        type: 'POST',
-                        url: '/admin/sys-module',
-                        data: {_token: $('meta[name="_token"]').attr('content')},
-                    },
-                    edit: {
-                        type: 'PUT',
-                        url: '/admin/sys-module/_id_',
-                        data: {_token: $('meta[name="_token"]').attr('content')},
-                    },
-                    remove: {
-                        type: 'DELETE',
-                        url: '/admin/sys-module/_id_',
-                        data: {_token: $('meta[name="_token"]').attr('content')},
-                    }
-                },
-                table: "#moduleTable",
-                idSrc: 'id',
-                fields: [
-                    {'label': 'name', 'name': 'name',},
-                    {'label': 'display_name', 'name': 'display_name',},
-                    {'label': 'description', 'name': 'description',},
-                    {'label': 'icon', 'name': 'icon',},
-                ]
-            });
-
-            table = $("#moduleTable").DataTable({
-                dom: "Bfrtip",
-                language: zhCN,
-                processing: true,
-                serverSide: true,
-                select: true,
-                paging: true,
-                ajax: '/admin/sys-module/pagination',
-                columns: [
-                    { "data": "id" },
-                    { "data": "name" },
-                    { "data": "desc" },
-                    { "data": "icon" },
-                    { "data": "sort" },
-                    { "data": "created_at" },
-                    { "data": "updated_at" },
-                ],
-                buttons: [
-                    { extend: "create", text:"create", action: function () {
-                        alert(1);
-                    } },
-                    { extend: "edit",   editor: editor },
-                    { extend: "remove", editor: editor }
-                ],
-            });
-
-
-        });
-
+            var treeData = {!! json_encode($modules) !!};
+            seajs.use('admin/sys_module', function (app) {
+                app.index($, 'moduleTree', treeData);
+            })
+        })
     </script>
 @endsection

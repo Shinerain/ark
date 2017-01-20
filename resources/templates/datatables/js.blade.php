@@ -47,12 +47,12 @@ define(function(require, exports, module) {
             idSrc: 'id',
             fields: [
 @forelse($columns as $col)
-    @if(!exclude($col))
-        { 'label':  '{{$col->display}}', 'name': '{{$col->name}}',<?=showEditorType($col)?> },
+@if(!exclude($col))
+    { 'label':  '{{$col->display}}', 'name': '{{$col->name}}',<?=showEditorType($col)?> },
     @endif
 @empty
 @endforelse
-]
+    ]
         });
 
         var table = $("#" + tableId).DataTable({
