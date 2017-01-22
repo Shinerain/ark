@@ -18,12 +18,15 @@ class SysModuleController extends DataTableController
     public function index()
     {
         //
+	    $icons = SysDic::where('category', 'icon')->get();
 	    $entities = SysModule::where('pid', 0)->get();
 	    $data = $entities->map(function ($entity){
-	    	return $this->toBootstrapTreeViewData($entity, ['text' => 'name', 'data-id' => 'id']);
+	    	return $this->toBootstrapTreeViewData($entity, ['text' => 'name', 'data-id' => 'id', 'icon' => 'icon']);
 	    });
 
-	    return view('admin.sys-module.index')->withModules($data);
+	    return view('admin.sys-module.index')
+		    ->withModules($data)
+		    ->withIcons($icons);
     }
 
     /**
@@ -189,11 +192,12 @@ class SysModuleController extends DataTableController
 	 * @return array
 	 */
 	public function toBootstrapTreeViewData($entity, $props){
-		$data = [];
+		$data = ['item' => $entity];
 		if(!empty($entity)){
 			foreach ($props as $k => $val){
 				$data[$k] = $entity->{$val};
 			}
+
 			if(!empty($entity->children)){
 				$nodes = [];
 				foreach ($entity->children as $child){
