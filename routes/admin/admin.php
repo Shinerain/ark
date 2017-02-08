@@ -12,6 +12,7 @@ Route::resource('user', 'UserController');
 Route::resource('permission', 'PermissionController');
 Route::get('sys-module/pagination', ['uses' => 'SysModuleController@pagination']);
 Route::any('sys-module/action', ['uses' => 'SysModuleController@action']);
+Route::any('sys-module/gen-code', ['uses' => 'SysModuleController@genCode']);
 Route::resource('sys-module', 'SysModuleController');
 Route::get('sys-table/pagination', ['uses' => 'SysTableController@pagination']);
 Route::resource('sys-table', 'SysTableController');

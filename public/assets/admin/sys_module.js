@@ -46,6 +46,16 @@ define(function(require, exports, module) {
             $('#' + treeId).treeview('collapseAll');
         });
 
+        $('#btnGenerateCode').click(function () {
+            layer.open({
+                title: '生成模块代码',
+                area: ['600px', '400px'],
+                type: 2,
+                closeBtn:1,
+                maxmin:1,
+                content: '/admin/sys-module/gen-code'
+            })
+        })
 
     }
 

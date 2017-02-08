@@ -41,6 +41,8 @@
                                     <li class="divider"></li>
                                     <li><a href="#" id="btnOpen"><i class="fa fa-folder-open"></i>展开</a></li>
                                     <li><a href="#" id="btnCollapse"><i class="fa fa-folder"></i>折叠</a></li>
+                                    <li class="divider"></li>
+                                    <li><a href="#" id="btnGenerateCode"><i class="fa fa-code"></i>生成代码</a></li>
                                 </ul>
                             </div>
                         </div>
@@ -131,7 +133,6 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-
                         <table id="moduleTable" class="table table-bordered table-hover">
                             <thead>
                             <tr>
@@ -153,7 +154,7 @@
         </div>
         <!-- /.row -->
     </section>
-
+    
 @endsection
 
 @section('js')

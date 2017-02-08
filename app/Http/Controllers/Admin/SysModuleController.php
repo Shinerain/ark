@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\DataTableController;
+use App\Services\DbHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\SysModule ;
@@ -185,29 +186,13 @@ class SysModuleController extends DataTableController
 		return parent::success([]);
 	}
 
-	/**
-	 * 将实体数据转换成树形（bootstrap treeview）数据
-	 * @param $entity
-	 * @param $props 属性映射集合 ['text' => 'name', 'data-id' => 'id']
-	 * @return array
-	 */
-	public function toBootstrapTreeViewData($entity, $props){
-		$data = ['item' => $entity];
-		if(!empty($entity)){
-			foreach ($props as $k => $val){
-				$data[$k] = $entity->{$val};
-			}
+	public function genCode(Request $request){
+		if($request->isMethod('GET')) {
+			$helper = new DbHelper();
+			$tables = $helper->getTables();
+			return view('admin.sys-module.generate')->withTables($tables);
+		}else{
 
-			if(!empty($entity->children)){
-				$nodes = [];
-				foreach ($entity->children as $child){
-					$nodes[] = $this->toBootstrapTreeViewData($child, $props);
-				}
-				if(!empty($nodes))
-					$data['nodes'] = $nodes;
-			}
 		}
-		return $data;
 	}
-
 }
