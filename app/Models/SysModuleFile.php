@@ -4,7 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SysModuleFile extends Model
+class SysModuleFile extends BaseModel
 {
     //
 }

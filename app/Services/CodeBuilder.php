@@ -33,15 +33,17 @@ class CodeBuilder
 	/**
 	 * create file by templates
 	 * @param array $outputs
+	 * @return array | files
 	 */
-	public function createFiles(...$outputs){
+	public function createFiles($outputs){
 		$data = [
 			'BEGIN_PHP' => static::BEGIN_PHP,
 			'model' => $this->model,
 			'table' => $this->table,
 			'columns' => $this->columns
 		];
-
+		$files = [];
+		//var_dump($outputs);
 		foreach ($this->outputs as $group) {
 			if (!empty($outputs) && !in_array($group, $outputs)) {
 				continue;
@@ -62,8 +64,10 @@ class CodeBuilder
 				$filePath = $dir . DIRECTORY_SEPARATOR . $fileName;
 				$content = $this->blade->view()->make($group . '.' . $viewName, $data)->render();
 				file_put_contents($filePath, $content);
+				$files[] =['name' => $fileName, 'path' => $filePath, 'content' => $content] ;
 			}
 		}
+		return $files;
 	}
 
 }

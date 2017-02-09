@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\DataTableController;
+use App\Models\SysModuleFile;
+use App\Services\CodeBuilder;
 use App\Services\DbHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -188,11 +190,32 @@ class SysModuleController extends DataTableController
 
 	public function genCode(Request $request){
 		if($request->isMethod('GET')) {
+			$id = $request->input('id');
 			$helper = new DbHelper();
 			$tables = $helper->getTables();
-			return view('admin.sys-module.generate')->withTables($tables);
+			return view('admin.sys-module.generate')->withTables($tables)->withId($id);
 		}else{
-
+			$id = $request->input('id');
+			$tableName = $request->input('tableName');
+			$modelName = $request->input('modelName', '');
+			$templates = $request->input('templates', []);
+			if(empty($modelName)){
+				$modelName = snake_case($tableName);
+			}
+			//var_dump($templates);
+			$db = new DbHelper();
+			$columns = $db->getColumns($tableName);
+			//var_dump($columns);
+			$builder = new CodeBuilder($modelName, $tableName, $columns);
+			$files = $builder->createFiles($templates);
+			//var_dump($files);
+			if(!empty($files)){
+				foreach ($files as $file){
+					$att = $file + ['sys_module_id' => $id];
+					SysModuleFile::create($att);
+				}
+			}
+			return response()->json(['code' => 200]);
 		}
 	}
 }

@@ -133,10 +133,11 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <table id="moduleTable" class="table table-bordered table-hover">
+                        <table id="moduleFileTable" class="table table-bordered table-hover">
                             <thead>
                             <tr>
                                 <th>id</th>
+                                <th>sys_module_id</th>
                                 <th>名称</th>
                                 <th>描述</th>
                                 <th>路径</th>
@@ -170,7 +171,7 @@
         $(function () {
             var treeData = {!! json_encode($modules) !!};
             seajs.use('admin/sys_module', function (app) {
-                app.index($, 'moduleTree', treeData);
+                app.index($, 'moduleTree', treeData, 'moduleFileTable');
             })
         })
     </script>
