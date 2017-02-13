@@ -120,9 +120,10 @@ abstract class DataTableController extends Controller
 	 * Datatables UI page
 	 * @param Request $request
 	 * @param array $searchCols
+	 * @param function $conditionCall
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function pagination(Request $request, $searchCols = []){
+	public function pagination(Request $request, $searchCols = [], $conditionCall = null){
 		$start =  $request->input('start', 0);
 		$length = $request->input('length', 10);
 		$columns = $request->input('columns',[]);
@@ -142,6 +143,10 @@ abstract class DataTableController extends Controller
 
 		$total = $queryBuilder->count();
 
+		if($conditionCall != null && is_callable($conditionCall)){
+			$conditionCall($queryBuilder);
+		}
+
 		foreach ($conditions as $col => $val) {
 			$queryBuilder->where($col, $val);
 		}
@@ -152,7 +157,6 @@ abstract class DataTableController extends Controller
 					$query->orWhere($sc, 'like', '%' . $search['value'] . '%');
 				}
 			});
-
 		}
 		$filterCount = $queryBuilder->count();
 

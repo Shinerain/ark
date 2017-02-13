@@ -31,13 +31,14 @@
                         <table id="moduleTable" class="table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th>created_at</th>
-                                <th>desc</th>
-                                <th>engine</th>
                                 <th>id</th>
-                                <th>model_name</th>
-                                <th>name</th>
-                                <th>updated_at</th>
+                                <th>名称</th>
+                                <th>实体名称</th>
+                                <th>描述</th>
+                                <th>引擎</th>
+                                <th>创建时间</th>
+                                <th>修改时间</th>
+                                <th>操作</th>
                             </tr>
                             </thead>
                         </table>

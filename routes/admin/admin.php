@@ -15,7 +15,7 @@ Route::any('sys-module/action', ['uses' => 'SysModuleController@action']);
 Route::any('sys-module/gen-code', ['uses' => 'SysModuleController@genCode']);
 Route::resource('sys-module', 'SysModuleController');
 Route::get('sys-table/pagination', ['uses' => 'SysTableController@pagination']);
-Route::resource('sys-table', 'SysTableController');
+//Route::resource('sys-table', 'SysTableController');
 Route::resource('sys-column', 'SysColumnController');
 Route::resource('sys-config', 'SysConfigController');
 

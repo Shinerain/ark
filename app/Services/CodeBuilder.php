@@ -64,7 +64,8 @@ class CodeBuilder
 				$filePath = $dir . DIRECTORY_SEPARATOR . $fileName;
 				$content = $this->blade->view()->make($group . '.' . $viewName, $data)->render();
 				file_put_contents($filePath, $content);
-				$files[] =['name' => $fileName, 'path' => $filePath, 'content' => $content] ;
+				$basePath = base_path('');
+				$files[] =['name' => $fileName, 'path' => str_replace($basePath, '', $filePath), 'content' => $content] ;
 			}
 		}
 		return $files;

@@ -5,22 +5,22 @@ define(function(require, exports, module) {
 
     var zhCN = require('datatableZh');
     var editorCN = require('i18n');
-    exports.index = function ($, tableId) {
+    exports.index = function ($, tableId, id) {
         var editor = new $.fn.dataTable.Editor({
             ajax: {
                 create: {
                     type: 'POST',
-                    url: '/admin/sys-table',
+                    url: '/admin/sys-column',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 },
                 edit: {
                     type: 'PUT',
-                    url: '/admin/sys-table/_id_',
+                    url: '/admin/sys-column/_id_',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 },
                 remove: {
                     type: 'DELETE',
-                    url: '/admin/sys-table/_id_',
+                    url: '/admin/sys-column/_id_',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 }
             },
@@ -43,18 +43,23 @@ define(function(require, exports, module) {
             select: true,
             paging: true,
             rowId: "id",
-            ajax: '/admin/sys-table/pagination',
+            ajax: '/admin/sys-table/'+id+'/columns/pagination',
             columns: [
+                {  'data': 'sys_table_id' },
                 {  'data': 'id' },
                 {  'data': 'name' },
-                {  'data': 'model_name' },
-                {  'data': 'desc' },
-                {  'data': 'engine' },
+                {  'data': 'comment' },
+                {  'data': 'data_type' },
+                {  'data': 'is_nullable' },
                 {  'data': 'created_at' },
                 {  'data': 'updated_at' },
-                {  'data': 'id', 'render': function (data, type, row) {
-                    return '<a href="/admin/sys-table/'+data+'/columns">设定字段</a>';
-                } },
+            ],
+            "columnDefs": [
+                {
+                    "targets": [ 0 ],
+                    "visible": false,
+                    "searchable": false
+                },
             ],
             buttons: [
                 // { text: '新增', action: function () { }  },

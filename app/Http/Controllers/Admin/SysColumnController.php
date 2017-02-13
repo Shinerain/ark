@@ -2,12 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\DataTableController;
 use App\Models\SysColumn;
+use App\Models\SysTable;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\SysDic;
+use Route;
 
-class SysColumnController extends Controller
+class SysColumnController extends DataTableController
 {
     /**
      * Display a listing of the resource.
@@ -87,4 +90,31 @@ class SysColumnController extends Controller
     {
         //
     }
+
+    public function table(Request $request, $id){
+    	$table = SysTable::find($id);
+	    return view('admin.sys-column.index')->withTable($table);
+    }
+
+	/**
+	 * @param  Request $request
+	 * @param  array $searchCols
+	 * @param null $conditionCall
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function pagination(Request $request, $searchCols = [], $conditionCall = NULL){
+		$searchCols = ["comment","name"];
+		$id = Route::input('id');
+		//var_dump($id);
+		return parent::pagination($request, $searchCols, function ($queryBuilder) use($id){
+			$queryBuilder->where('sys_table_id', $id);
+		});
+	}
+
+	public function newEntity(array $attributes = [])
+	{
+		// TODO: Implement newEntity() method.
+		return new SysColumn($attributes);
+	}
+
 }
