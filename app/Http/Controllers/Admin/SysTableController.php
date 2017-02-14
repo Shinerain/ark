@@ -58,13 +58,14 @@ class SysTableController extends DataTableController
 	}
 
 	/**
-	* @param  Request $request
-	* @param  array $searchCols
-	* @return  \Illuminate\Http\JsonResponse
-	*/
-	public function pagination(Request $request, $searchCols = []){
+	 * @param  Request $request
+	 * @param  array $searchCols
+	 * @param null $conditionCall
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function pagination(Request $request, $searchCols = [], $conditionCall = NULL){
 		$searchCols = ["desc","engine","model_name","name"];
-		return parent::pagination($request, $searchCols);
+		return parent::pagination($request, $searchCols, $conditionCall);
 	}
 
 }

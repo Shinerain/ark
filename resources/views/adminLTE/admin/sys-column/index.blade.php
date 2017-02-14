@@ -28,12 +28,6 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <div class="margin">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-success"><i class="fa fa-pencil"></i> 新增</button>
-                            </div>
-                        </div>
-
                         <table id="columnTable" class="table table-bordered table-hover">
                             <thead>
                             <tr>
