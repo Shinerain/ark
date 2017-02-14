@@ -2,6 +2,44 @@
 
 @section('styles')
     @include('admin.layout.datatable-css')
+    <style type="text/css">
+        #customForm {
+            display: flex;
+            flex-flow: row wrap;
+        }
+
+        #customForm fieldset {
+            flex: 1;
+            border: 1px solid #aaa;
+            margin: 0.5em;
+        }
+
+        #customForm fieldset legend {
+            padding: 5px 20px;
+            border: 1px solid #aaa;
+            font-weight: bold;
+        }
+
+        #customForm fieldset.name {
+            flex: 2 100%;
+        }
+
+        #customForm fieldset.name legend {
+            background: #bfffbf;
+        }
+
+        #customForm fieldset.office legend {
+            background: #ffffbf;
+        }
+
+        #customForm fieldset.hr legend {
+            background: #ffbfbf;
+        }
+
+        #customForm div.DTE_Field {
+            padding: 5px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -28,6 +66,30 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        <div id="customForm">
+                            <fieldset class="name">
+                                <legend>Name</legend>
+                                <editor-field name="sys_table_id"></editor-field>
+                                <editor-field name="name"></editor-field>
+                                <editor-field name="display"></editor-field>
+                                <editor-field name="default_value"></editor-field>
+                                <editor-field name="comment"></editor-field>
+                            </fieldset>
+                            <fieldset class="office">
+                                <legend>Office</legend>
+                                <editor-field name="data_type"></editor-field>
+                                <editor-field name="length"></editor-field>
+                                <editor-field name="decimal_scale"></editor-field>
+                            </fieldset>
+                            <fieldset class="hr">
+                                <legend>HR info</legend>
+                                <editor-field name="is_nullable"></editor-field>
+                                <editor-field name="is_autoincrement"></editor-field>
+                                <editor-field name="key_type"></editor-field>
+                                <editor-field name="ctrl_type"></editor-field>
+                                <editor-field name="sort"></editor-field>
+                            </fieldset>
+                        </div>
                         <table id="columnTable" class="table table-bordered table-hover">
                             <thead>
                             <tr>

@@ -177,10 +177,11 @@ class SysModuleController extends DataTableController
 	/**
 	 * @param Request $request
 	 * @param array $searchCols
+	 * @param array $with
 	 * @param null $conditionCall
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function pagination(Request $request, $searchCols = [], $conditionCall = NULL){
+	public function pagination(Request $request, $searchCols = [], $with = [], $conditionCall = NULL){
 		$searchCols = ['name', 'desc'];
 		return parent::pagination($request, $searchCols, $conditionCall);
 	}

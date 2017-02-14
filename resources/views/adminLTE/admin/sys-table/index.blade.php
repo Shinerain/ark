@@ -7,13 +7,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            top module
-            <small>sys_tables</small>
+            系统管理
+            <small>数据表管理</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">top module</a></li>
-            <li class="active">sys_tables</li>
+            <li><a href="#">系统管理</a></li>
+            <li class="active">数据表管理</li>
         </ol>
     </section>
 
@@ -23,7 +23,7 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">sys_tables列表</h3>
+                        <h3 class="box-title">数据表</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">

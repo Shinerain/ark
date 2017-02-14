@@ -36,17 +36,6 @@ class SysColumnController extends DataTableController
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param  int  $id
@@ -68,29 +57,6 @@ class SysColumnController extends DataTableController
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
-
     public function table(Request $request, $id){
     	$table = SysTable::find($id);
 	    return view('admin.sys-column.index')->withTable($table);
@@ -99,14 +65,15 @@ class SysColumnController extends DataTableController
 	/**
 	 * @param  Request $request
 	 * @param  array $searchCols
+	 * @param array $with
 	 * @param null $conditionCall
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function pagination(Request $request, $searchCols = [], $conditionCall = NULL){
+	public function pagination(Request $request, $searchCols = [], $with = [], $conditionCall = NULL){
 		$searchCols = ["comment","name"];
 		$id = Route::input('id');
 		//var_dump($id);
-		return parent::pagination($request, $searchCols, function ($queryBuilder) use($id){
+		return parent::pagination($request, $searchCols, [], function ($queryBuilder) use($id){
 			$queryBuilder->where('sys_table_id', $id);
 		});
 	}

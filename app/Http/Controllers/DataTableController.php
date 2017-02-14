@@ -120,10 +120,11 @@ abstract class DataTableController extends Controller
 	 * Datatables UI page
 	 * @param Request $request
 	 * @param array $searchCols
+	 * @param array $with
 	 * @param function $conditionCall
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function pagination(Request $request, $searchCols = [], $conditionCall = null){
+	public function pagination(Request $request, $searchCols = [], $with = [], $conditionCall = null){
 		$start =  $request->input('start', 0);
 		$length = $request->input('length', 10);
 		$columns = $request->input('columns',[]);
@@ -132,6 +133,10 @@ abstract class DataTableController extends Controller
 		$draw = $request->input('draw', 0);
 
 		$queryBuilder = $this->newEntity()->newQuery();
+		if(!empty($with)){
+			$queryBuilder->with($with);
+		}
+
 		$fields = [];
 		$conditions = [];
 		foreach ($columns as $column){
