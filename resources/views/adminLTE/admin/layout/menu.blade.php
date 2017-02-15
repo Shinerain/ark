@@ -65,10 +65,9 @@
                     <li><a href="{{url('/admin/sys-config')}}"><i class="fa fa-cogs"></i>配置管理</a></li>
                     <li><a href="{{url('/admin/sys-module')}}"><i class="fa fa-cubes"></i>模块管理</a></li>
                     <li><a href="{{url('/admin/sys-table')}}"><i class="fa fa-table"></i>数据表管理</a></li>
-                    {{--<li><a href="{{url('/admin/sys-column')}}"><i class="fa fa-columns"></i>数据列管理</a></li>--}}
+                    <li><a href="{{url('/admin/sys-dic')}}"><i class="fa fa-book"></i>字典管理</a></li>
                 </ul>
             </li>
-
         </ul>
     </section>
     <!-- /.sidebar -->

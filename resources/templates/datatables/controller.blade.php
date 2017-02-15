@@ -71,9 +71,9 @@ class {{$model}}Controller extends DataTableController
 	* @param array $searchCols
 	* @return \Illuminate\Http\JsonResponse
 	*/
-	public function pagination(Request $request, $searchCols = [], $conditionCall = null){
+	public function pagination(Request $request,  $searchCols = [], $with = [], $conditionCall = null){
 		$searchCols = {!! json_encode($searchCols) !!};
-		return parent::pagination($request, $searchCols, $conditionCall);
+		return parent::pagination($request, $searchCols, $with, $conditionCall);
 	}
 
 }

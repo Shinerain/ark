@@ -28,8 +28,10 @@ class CreateTableSysColumns extends Migration
 		    $table->string('default_value')->default('')->comment('默认值');
 		    $table->string('comment')->default('')->comment('描述');
 		    $table->string('ctrl_type')->default('')->comment('控件类型');
+		    $table->string('ctrl_data_source')->default('')->comment('下拉选择控件数据源');
 		    $table->string('ctrl_valid_rule')->default('')->comment('验证规则');
 		    $table->integer('sort')->default(0)->comment('排序');
+		    $table->integer('status')->default(0)->comment('状态（0-初始,1-被创建/更新,2-被修改）');
 		    $table->timestamps();
 	    });
     }

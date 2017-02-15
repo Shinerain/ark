@@ -16,11 +16,11 @@ class CreateTableSysTables extends Migration
         //
 	    Schema::create('sys_tables', function (Blueprint $table) {
 		    $table->increments('id');
-		    $table->integer('sys_module_id');
 		    $table->string('name')->comment('表名');
 		    $table->string('model_name')->comment('实体名');
 		    $table->string('desc')->default('')->comment('表描述');
 		    $table->string('engine')->default('InnoDB')->comment('表引擎');
+		    $table->integer('status')->default(0)->comment('状态（0-初始,1-已经创建了表,2-被修改）');
 		    $table->timestamps();
 	    });
     }

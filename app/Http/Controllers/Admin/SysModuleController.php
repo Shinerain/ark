@@ -183,7 +183,7 @@ class SysModuleController extends DataTableController
 	 */
 	public function pagination(Request $request, $searchCols = [], $with = [], $conditionCall = NULL){
 		$searchCols = ['name', 'desc'];
-		return parent::pagination($request, $searchCols, $conditionCall);
+		return parent::pagination($request, $searchCols, $with, $conditionCall);
 	}
 
 	public function action(){

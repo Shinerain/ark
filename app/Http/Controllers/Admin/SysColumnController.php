@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\DataTableController;
 use App\Models\SysColumn;
 use App\Models\SysTable;
+use Closure;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\SysDic;
 use Route;
+use DB;
 
 class SysColumnController extends DataTableController
 {
@@ -59,7 +61,12 @@ class SysColumnController extends DataTableController
 
     public function table(Request $request, $id){
     	$table = SysTable::find($id);
-	    return view('admin.sys-column.index')->withTable($table);
+    	$dics =  DB::select('select DISTINCT category from sys_dics ');
+    	$categories = array_map(function ($item){
+    		return ['label' => $item->category, 'value' => $item->category];
+	    }, $dics);
+    	array_push($categories, ['label' => '--select--', 'value' => '']);
+	    return view('admin.sys-column.index')->withTable($table)->withCategories($categories);
     }
 
 	/**
@@ -69,11 +76,11 @@ class SysColumnController extends DataTableController
 	 * @param null $conditionCall
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function pagination(Request $request, $searchCols = [], $with = [], $conditionCall = NULL){
+	public function pagination(Request $request, $searchCols = [], $with = [],  $conditionCall = NULL){
 		$searchCols = ["comment","name"];
 		$id = Route::input('id');
 		//var_dump($id);
-		return parent::pagination($request, $searchCols, [], function ($queryBuilder) use($id){
+		return parent::pagination($request, $searchCols, $with, function ($queryBuilder) use($id){
 			$queryBuilder->where('sys_table_id', $id);
 		});
 	}

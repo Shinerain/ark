@@ -28,11 +28,11 @@ define(function(require, exports, module) {
             table: "#" + tableId,
             idSrc: 'id',
             fields: [
-                { 'label':  'desc', 'name': 'desc', },
-                { 'label':  'engine', 'name': 'engine', },
-                { 'label':  'model_name', 'name': 'model_name', },
-                { 'label':  'name', 'name': 'name', },
-        ]
+                { 'label':  '名称', 'name': 'name', },
+                { 'label':  '实体名称', 'name': 'model_name', },
+                { 'label':  '描述', 'name': 'desc', },
+                { 'label':  '引擎', 'name': 'engine', 'type':'select', 'options':[{'label':'InnoDB', 'value':'InnoDB'},{'label':'MyISAM', 'value':'MyISAM'}]},
+            ]
         });
 
         var table = $("#" + tableId).DataTable({
@@ -53,7 +53,7 @@ define(function(require, exports, module) {
                 {  'data': 'created_at' },
                 {  'data': 'updated_at' },
                 {  'data': 'id', 'render': function (data, type, row) {
-                    return '<a href="/admin/sys-table/'+data+'/columns">设定字段</a>';
+                    return '<a href="/admin/sys-table/'+data+'/columns">设定字段</a>&nbsp;&nbsp;&nbsp;<a href="/admin/sys-table/'+data+'/columns">生成数据表</a>';
                 } },
             ],
             buttons: [

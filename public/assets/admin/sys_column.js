@@ -5,7 +5,7 @@ define(function(require, exports, module) {
 
     var zhCN = require('datatableZh');
     var editorCN = require('i18n');
-    exports.index = function ($, tableId, id) {
+    exports.index = function ($, tableId, id, dicCategories) {
         var editor = new $.fn.dataTable.Editor({
             ajax: {
                 create: {
@@ -43,15 +43,16 @@ define(function(require, exports, module) {
                         {'label': 'timestamp', 'value': 'timestamp'},
                         {'label': 'decimal', 'value': 'decimal'},
                         {'label': 'integer', 'value': 'integer'},
+                        {'label': 'binary', 'value': 'binary'},
                         ]
                 },
-                { 'label':  '长度', 'name': 'length', },
-                { 'label':  '小数', 'name': 'decimal_scale', },
+                { 'label':  '长度', 'name': 'length', def: 255},
+                { 'label':  '小数', 'name': 'decimal_scale', def: 0},
                 { 'label':  '可空', 'name': 'is_nullable', 'type': "radio", 'options': [{'label': 'Yes', 'value': '1'},{'label': 'No', 'value': '0'}], def: 1 },
                 { 'label':  '自增', 'name': 'is_autoincrement', 'type': "radio", 'options': [{'label': 'Yes', 'value': '1'},{'label': 'No', 'value': '0'}], def: 0},
                 { 'label':  '键', 'name': 'key_type', 'type': 'select', 'options': [{'label': 'primary', 'value': 'primary'},{'label': 'unique', 'value': 'unique'},{'label': 'none', 'value': ''}]},
                 { 'label':  '默认值', 'name': 'default_value', },
-                { 'label':  '排序', 'name': 'sort', },
+                { 'label':  '排序', 'name': 'sort', def: 0},
                 {   'label':  '控件类型',
                     'name': 'ctrl_type',
                     'type': 'select',
@@ -69,6 +70,8 @@ define(function(require, exports, module) {
                         {'label': 'uploadMany', 'value': 'uploadMany'},
                         ]
                 },
+                { 'label':  '验证规则', 'name': 'ctrl_valid_rule', },
+                { 'label':  '数据源', 'name': 'ctrl_data_source', 'type': 'select', 'options': dicCategories },
             ]
         });
 
@@ -87,13 +90,25 @@ define(function(require, exports, module) {
                 {  'data': 'name' },
                 {  'data': 'comment' },
                 {  'data': 'data_type' },
-                {  'data': 'is_nullable' },
+                {  'data': 'is_nullable', 'render': function (data) {
+                    return data == 1 ? '是':'否';
+                } },
+                {  'data': 'key_type' },
+                {  'data': 'sort' },
                 {  'data': 'created_at' },
                 {  'data': 'updated_at' },
+                {  'data': 'display' },
+                {  'data': 'length' },
+                {  'data': 'decimal_scale' },
+                {  'data': 'is_autoincrement' },
+                {  'data': 'default_value' },
+                {  'data': 'ctrl_type' },
+                {  'data': 'ctrl_valid_rule' },
+                {  'data': 'ctrl_data_source' },
             ],
             "columnDefs": [
                 {
-                    "targets": [ 0 ],
+                    "targets": [ 0,10,11,12,13,14,15,16,17 ],
                     "visible": false,
                     "searchable": false
                 },
@@ -108,6 +123,7 @@ define(function(require, exports, module) {
                 {extend: 'excel', text: '导出Excel<i class="fa fa-fw fa-file-excel-o"></i>'},
                 {extend: 'print', text: '打印<i class="fa fa-fw fa-print"></i>'},
                 //{extend: 'colvis', text: '列显示'}
+                { text: '生成数据表', action: function () { }  },
             ]
         });
 

@@ -15,29 +15,29 @@
         }
 
         #customForm fieldset legend {
-            padding: 5px 20px;
+            padding: 3px 20px;
             border: 1px solid #aaa;
             font-weight: bold;
         }
 
-        #customForm fieldset.name {
+        #customForm fieldset.basic {
             flex: 2 100%;
         }
 
-        #customForm fieldset.name legend {
+        #customForm fieldset.basic legend {
             background: #bfffbf;
         }
 
-        #customForm fieldset.office legend {
+        #customForm fieldset.type legend {
             background: #ffffbf;
         }
 
-        #customForm fieldset.hr legend {
+        #customForm fieldset.other legend {
             background: #ffbfbf;
         }
 
         #customForm div.DTE_Field {
-            padding: 5px;
+            padding: 3px;
         }
     </style>
 @endsection
@@ -67,26 +67,28 @@
                     <!-- /.box-header -->
                     <div class="box-body">
                         <div id="customForm">
-                            <fieldset class="name">
-                                <legend>Name</legend>
+                            <fieldset class="basic">
+                                <legend>基本</legend>
                                 <editor-field name="sys_table_id"></editor-field>
                                 <editor-field name="name"></editor-field>
                                 <editor-field name="display"></editor-field>
-                                <editor-field name="default_value"></editor-field>
                                 <editor-field name="comment"></editor-field>
-                            </fieldset>
-                            <fieldset class="office">
-                                <legend>Office</legend>
-                                <editor-field name="data_type"></editor-field>
-                                <editor-field name="length"></editor-field>
-                                <editor-field name="decimal_scale"></editor-field>
-                            </fieldset>
-                            <fieldset class="hr">
-                                <legend>HR info</legend>
                                 <editor-field name="is_nullable"></editor-field>
                                 <editor-field name="is_autoincrement"></editor-field>
                                 <editor-field name="key_type"></editor-field>
+                            </fieldset>
+                            <fieldset class="type">
+                                <legend>类型</legend>
+                                <editor-field name="data_type"></editor-field>
+                                <editor-field name="length"></editor-field>
+                                <editor-field name="decimal_scale"></editor-field>
+                                <editor-field name="default_value"></editor-field>
+                            </fieldset>
+                            <fieldset class="other">
+                                <legend>其他</legend>
                                 <editor-field name="ctrl_type"></editor-field>
+                                <editor-field name="ctrl_data_source"></editor-field>
+                                <editor-field name="ctrl_valid_rule"></editor-field>
                                 <editor-field name="sort"></editor-field>
                             </fieldset>
                         </div>
@@ -99,14 +101,14 @@
                                 <th>描述</th>
                                 <th>数据类型</th>
                                 <th>是否可空</th>
+                                <th>键</th>
+                                <th>排序</th>
                                 <th>创建时间</th>
                                 <th>修改时间</th>
                             </tr>
                             </thead>
                             <tbody>
-
                             </tbody>
-
                         </table>
                     </div>
                     <!-- /.box-body -->
@@ -124,8 +126,9 @@
     @include('admin.layout.datatable-js')
     <script type="text/javascript">
         $(function () {
+            dicCategories = {!! json_encode($categories) !!}
             seajs.use('admin/sys_column.js', function (app) {
-                app.index($, 'columnTable', '{{$table->id}}');
+                app.index($, 'columnTable', '{{$table->id}}', dicCategories);
             });
         });
     </script>

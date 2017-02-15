@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Closure;
 
 /**
  * controller for UI Plugins: Datatables , Editor
@@ -121,7 +122,7 @@ abstract class DataTableController extends Controller
 	 * @param Request $request
 	 * @param array $searchCols
 	 * @param array $with
-	 * @param function $conditionCall
+	 * @param $conditionCall
 	 * @return \Illuminate\Http\JsonResponse
 	 */
 	public function pagination(Request $request, $searchCols = [], $with = [], $conditionCall = null){
