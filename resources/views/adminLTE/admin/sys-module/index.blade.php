@@ -122,6 +122,12 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
+                                            <label for="permission_flag" class="col-sm-2 control-label">权限标识</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" class="form-control" id="permission_flag" placeholder="权限标识" name="permission_flag" value="">
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
                                             <label for="desc" class="col-sm-2 control-label">描述</label>
                                             <div class="col-sm-6">
                                                 {{--<input type="text" class="form-control" id="desc" placeholder="描述" name="desc">--}}
