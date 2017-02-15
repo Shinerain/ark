@@ -26,6 +26,6 @@ use Illuminate\Database\Eloquent\Model;
 class {{$model}} extends Model
 {
 	//
-	protected $table = '{{$table}}';
+	protected $table = '{{$table->name}}';
 	protected $guarded = ['id'];
 }

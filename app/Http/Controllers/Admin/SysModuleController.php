@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\DataTableController;
+use App\Models\SysColumn;
 use App\Models\SysModuleFile;
+use App\Models\SysTable;
 use App\Services\CodeBuilder;
 use App\Services\DbHelper;
 use Illuminate\Http\Request;
@@ -157,22 +159,28 @@ class SysModuleController extends DataTableController
 	public function genCode(Request $request){
 		if($request->isMethod('GET')) {
 			$id = $request->input('id');
-			$helper = new DbHelper();
-			$tables = $helper->getTables();
+//			$helper = new DbHelper();
+//			$tables = $helper->getTables();
+			$tables = SysTable::all();
 			return view('admin.sys-module.generate')->withTables($tables)->withId($id);
 		}else{
 			$id = $request->input('id');
-			$tableName = $request->input('tableName');
+			$tableId = $request->input('tableId');
 			$modelName = $request->input('modelName', '');
 			$templates = $request->input('templates', []);
-			if(empty($modelName)){
-				$modelName = snake_case($tableName);
-			}
+
 			//var_dump($templates);
-			$db = new DbHelper();
-			$columns = $db->getColumns($tableName);
+//			$db = new DbHelper();
+//			$columns = $db->getColumns($tableName);
 			//var_dump($columns);
-			$builder = new CodeBuilder($modelName, $tableName, $columns);
+			//$columns = SysColumn::
+			$module = SysModule::find($id);
+			$table = SysTable::find($tableId);
+			if(empty($modelName)){
+				$modelName = $table->model_name;//snake_case($tableName);
+			}
+			$columns = SysColumn::where('sys_table_id', $tableId)->orderBy('sort', 'asc')->get();
+			$builder = new CodeBuilder($modelName, $table, $columns, $module);
 			$files = $builder->createFiles($templates);
 			//var_dump($files);
 			if(!empty($files)){

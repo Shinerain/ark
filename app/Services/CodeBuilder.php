@@ -19,12 +19,14 @@ class CodeBuilder
 	protected $table;
 	protected $model;
 	protected $columns;
+	protected $module;
 
-	public function __construct($model, $table, $columns)
+	public function __construct($model, $table, $columns, $module)
 	{
 		$this->table = $table;
 		$this->model = ucfirst($model);
 		$this->columns = $columns;
+		$this->module = $module;
 		$this->blade_config = config('codebuilder.blade');
 		$this->outputs = config('codebuilder.outputs');
 		$this->blade = new Blade( $this->blade_config['template'], $this->blade_config['template_cache']);
@@ -40,7 +42,8 @@ class CodeBuilder
 			'BEGIN_PHP' => static::BEGIN_PHP,
 			'model' => $this->model,
 			'table' => $this->table,
-			'columns' => $this->columns
+			'columns' => $this->columns,
+			'module' => $this->module
 		];
 		$files = [];
 		//var_dump($outputs);

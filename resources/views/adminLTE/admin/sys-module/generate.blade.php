@@ -10,10 +10,10 @@
             <div class="form-group">
                 <label for="name" class="col-sm-2 control-label">数据库表</label>
                 <div class="col-sm-10">
-                    <select class="form-control" id="tableName" name="tableName">
+                    <select class="form-control" id="tableId" name="tableId">
                         <option value="">--select--</option>
                         @forelse($tables as $table)
-                            <option value="{{$table->name}}">{{$table->name}}</option>
+                            <option value="{{$table->id}}">{{$table->name}}</option>
                         @empty
                         @endforelse
                     </select>

@@ -1,11 +1,3 @@
-<?php
-
-function exclude($column){
-	$arr = ['id', 'created_at', 'updated_at'];
-	return in_array($column->name , $arr);
-}
-?>
-
 /**
 *
 */
@@ -18,17 +10,17 @@ define(function(require, exports, module) {
             ajax: {
                 create: {
                     type: 'POST',
-                    url: '/admin/{{snake_case($model,'-')}}',
+                    url: '/admin/sys-dic',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 },
                 edit: {
                     type: 'PUT',
-                    url: '/admin/{{snake_case($model,'-')}}/_id_',
+                    url: '/admin/sys-dic/_id_',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 },
                 remove: {
                     type: 'DELETE',
-                    url: '/admin/{{snake_case($model,'-')}}/_id_',
+                    url: '/admin/sys-dic/_id_',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 }
             },
@@ -36,13 +28,10 @@ define(function(require, exports, module) {
             table: "#" + tableId,
             idSrc: 'id',
             fields: [
-@forelse($columns as $col)
-@if(!exclude($col))
-    { 'label':  '{{$col->display}}', 'name': '{{$col->name}}','type': '{{$col->ctrl_type}}' },
-    @endif
-@empty
-@endforelse
-    ]
+    { 'label':  '值', 'name': 'value','type': 'text' },
+        { 'label':  '显示', 'name': 'text','type': 'text' },
+        { 'label':  '类型', 'name': 'category','type': 'text' },
+        ]
         });
 
         var table = $("#" + tableId).DataTable({
@@ -53,13 +42,15 @@ define(function(require, exports, module) {
             select: true,
             paging: true,
             rowId: "id",
-            ajax: '/admin/{{snake_case($model,'-')}}/pagination',
+            ajax: '/admin/sys-dic/pagination',
             columns: [
-        @forelse($columns as $col)
-            {  'data': '{{$col->name}}' },
-        @empty
-        @endforelse
-    ],
+                    {  'data': 'id' },
+                    {  'data': 'value' },
+                    {  'data': 'text' },
+                    {  'data': 'category' },
+                    {  'data': 'created_at' },
+                    {  'data': 'updated_at' },
+            ],
             buttons: [
                 // { text: '新增', action: function () { }  },
                 // { text: '编辑', className: 'edit', enabled: false },
