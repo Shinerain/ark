@@ -6,11 +6,11 @@ use Illuminate\Database\Eloquent\Model;
 
 /**
  * model description
- * Class User
+ * Class Users
  * @package  App\Models
  *
  * @author  xrs
- * @SWG\Model(id="User")
+ * @SWG\Model(id="Users")
  * @SWG\Property(name="id", type="integer", description="id")
  * @SWG\Property(name="name", type="string", description="名称")
  * @SWG\Property(name="password", type="string", description="密码")
@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\Model;
  * @SWG\Property(name="created_at", type="timestamp", description="创建时间")
  * @SWG\Property(name="updated_at", type="timestamp", description="修改时间")
   */
-class User extends Model
+class Users extends Model
 {
 	//
 	protected $table = 'users';

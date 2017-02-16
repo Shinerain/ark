@@ -123,7 +123,6 @@ define(function(require, exports, module) {
                 {extend: 'excel', text: '导出Excel<i class="fa fa-fw fa-file-excel-o"></i>'},
                 {extend: 'print', text: '打印<i class="fa fa-fw fa-print"></i>'},
                 //{extend: 'colvis', text: '列显示'}
-                { text: '生成数据表', action: function () { }  },
             ]
         });
 

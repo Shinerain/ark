@@ -8,12 +8,12 @@
     <section class="content-header">
         <h1>
             用户权限管理
-            <small>用户管理</small>
+            <small>菜单权限管理</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
             <li><a href="#">用户权限管理</a></li>
-            <li class="active">用户管理</li>
+            <li class="active">菜单权限管理</li>
         </ol>
     </section>
 
@@ -23,7 +23,7 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">users列表</h3>
+                        <h3 class="box-title">权限列表</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -33,9 +33,10 @@
                             <tr>
                                 <th>id</th>
                                 <th>名称</th>
-                                <th>密码</th>
-                                <th>Email</th>
-                                <th>remember_token</th>
+                                <th>display_name</th>
+                                <th>描述</th>
+                                <th>类型</th>
+                                <th>Json</th>
                                 <th>创建时间</th>
                                 <th>修改时间</th>
                             </tr>
@@ -56,7 +57,7 @@
     @include('admin.layout.datatable-js')
     <script type="text/javascript">
         $(function () {
-            seajs.use('admin/user.js', function (app) {
+            seajs.use('admin/permission.js', function (app) {
                 app.index($, 'moduleTable');
             });
         });

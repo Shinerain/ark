@@ -8,6 +8,7 @@ use App\Http\Controllers\DataTableController;
 use App\Models\SysTable;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
+use DB;
 
 class SysTableController extends DataTableController
 {
@@ -123,7 +124,7 @@ class SysTableController extends DataTableController
 		if(!empty($column->comment)){
 			$dbCol->comment($column->comment);
 		}
-		if(!empty($column->default_value)){
+		if(!is_null($column->default_value)){
 			$dbCol->default($column->default_value);
 		}
 	}
@@ -140,4 +141,31 @@ class SysTableController extends DataTableController
 		return $this->build($request, $id);
 	}
 
+	public function db(Request $request){
+		if($request->isMethod('GET')) {
+			$tables = DbHelper::Instance()->getTables();
+			return view('admin.sys-table.db', ['tables' => $tables]);
+		}else{
+			$tablename = $request->input('tablename');
+			$tables = DbHelper::Instance()->getTables($tablename);
+			if(!empty($tables)){
+				try {
+					DB::transaction(function () use ($tables, $tablename) {
+						$table = current($tables);
+						$table->status=1;
+						$table->save();
+						$columns = DbHelper::Instance()->getColumns($tablename);
+						foreach ($columns as $column) {
+							$column->sys_table_id = $table->id;
+							$column->status = 1;
+							$column->save();
+						}
+					});
+				}catch (\Exception $e){
+					return $this->fail($e->getMessage());
+				}
+			}
+			return $this->success(1);
+		}
+	}
 }

@@ -169,11 +169,6 @@ class SysModuleController extends DataTableController
 			$modelName = $request->input('modelName', '');
 			$templates = $request->input('templates', []);
 
-			//var_dump($templates);
-//			$db = new DbHelper();
-//			$columns = $db->getColumns($tableName);
-			//var_dump($columns);
-			//$columns = SysColumn::
 			$module = SysModule::find($id);
 			$table = SysTable::find($tableId);
 			if(empty($modelName)){
@@ -196,6 +191,9 @@ class SysModuleController extends DataTableController
 						SysModuleFile::create($att);
 					}
 				}
+				$module->url = '/admin/' . snake_case($modelName, '-');
+				$module->permission_flag = 'admin_'.snake_case($modelName);
+				$module->save();
 			}
 			return response()->json(['code' => 200]);
 		}

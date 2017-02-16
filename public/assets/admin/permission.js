@@ -10,17 +10,17 @@ define(function(require, exports, module) {
             ajax: {
                 create: {
                     type: 'POST',
-                    url: '/admin/user',
+                    url: '/admin/permission',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 },
                 edit: {
                     type: 'PUT',
-                    url: '/admin/user/_id_',
+                    url: '/admin/permission/_id_',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 },
                 remove: {
                     type: 'DELETE',
-                    url: '/admin/user/_id_',
+                    url: '/admin/permission/_id_',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 }
             },
@@ -29,8 +29,10 @@ define(function(require, exports, module) {
             idSrc: 'id',
             fields: [
                 { 'label':  '名称', 'name': 'name','type': 'text' },
-                { 'label':  '密码', 'name': 'password','type': 'password' },
-                { 'label':  'Email', 'name': 'email','type': 'text' },
+                { 'label':  'display_name', 'name': 'display_name','type': 'text' },
+                { 'label':  '描述', 'name': 'description','type': 'text' },
+                { 'label':  '类型', 'name': 'type','type': 'text' },
+                { 'label':  'Json', 'name': 'data','type': 'text' },
             ]
         });
 
@@ -42,13 +44,14 @@ define(function(require, exports, module) {
             select: true,
             paging: true,
             rowId: "id",
-            ajax: '/admin/user/pagination',
+            ajax: '/admin/permission/pagination',
             columns: [
                     {  'data': 'id' },
                     {  'data': 'name' },
-                    {  'data': 'password' },
-                    {  'data': 'email' },
-                    {  'data': 'remember_token' },
+                    {  'data': 'display_name' },
+                    {  'data': 'description' },
+                    {  'data': 'type' },
+                    {  'data': 'data' },
                     {  'data': 'created_at' },
                     {  'data': 'updated_at' },
             ],

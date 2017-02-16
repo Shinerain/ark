@@ -66,6 +66,7 @@
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
+                        <div id="customFormDiv" style="display: none;">
                         <div id="customForm">
                             <fieldset class="basic">
                                 <legend>基本</legend>
@@ -91,6 +92,7 @@
                                 <editor-field name="ctrl_valid_rule"></editor-field>
                                 <editor-field name="sort"></editor-field>
                             </fieldset>
+                        </div>
                         </div>
                         <table id="columnTable" class="table table-bordered table-hover">
                             <thead>

@@ -54,11 +54,12 @@ define(function(require, exports, module) {
                 {  'data': 'created_at' },
                 {  'data': 'updated_at' },
                 {  'data': 'id', 'render': function (data, type, row) {
-                    var html =  '<a class="btn btn-default" href="/admin/sys-table/'+data+'/columns">设定字段</a>&nbsp;&nbsp;&nbsp;';
+                    var html =  '<a href="/admin/sys-table/'+data+'/columns">设定字段</a>&nbsp;';
                     if(row['status'] == 0){
-                        html += '<button class="btn btn-primary buildtable" data-table-id="'+data+'" >生成数据表</button>';
+                        html += '<a href="javascript:void;" class="buildtable" data-table-id="'+data+'" >生成数据表</a>&nbsp;';
                     }else{
-                        html += '<button class="btn btn-primary rebuildtable" data-table-id="'+data+'" >重新生成数据表</button>';
+                        html += '<a  href="javascript:void;" class="updatetable" data-table-id="'+data+'" >更新数据表</a>&nbsp;';
+                        html += '<a  href="javascript:void;" class="rebuildtable" data-table-id="'+data+'" >重新生成数据表</a>&nbsp;';
                     }
                     return html;
                 } },
@@ -69,7 +70,16 @@ define(function(require, exports, module) {
                 searchable: false
             }],
             buttons: [
-                // { text: '新增', action: function () { }  },
+                { text: '加载已有表', action: function () {
+                    layer.open({
+                        title: '从已有表加载',
+                        area: ['600px', '400px'],
+                        type: 2,
+                        closeBtn: 1,
+                        maxmin: 1,
+                        content: '/admin/sys-table/db'
+                    });
+                }  },
                 // { text: '编辑', className: 'edit', enabled: false },
                 // { text: '删除', className: 'delete', enabled: false },
                 {extend: "create", text: '新增<i class="fa fa-fw fa-plus"></i>', editor: editor},
@@ -104,6 +114,20 @@ define(function(require, exports, module) {
                     $.post(url, {_token: $('meta[name="_token"]').attr('content')}, function (res) {
                         if (res) {
                             layer.msg('生成成功!');
+                        }
+                    });
+                });
+            });
+
+            $('.updatetable').on("click", function () {
+                var id = $(this).attr('data-table-id');
+                var url = '/admin/sys-table/' + id + '/build';
+                layer.confirm('确定更新?', {
+                    buttons: ['确定', '取消']
+                }, function () {
+                    $.post(url, {_token: $('meta[name="_token"]').attr('content')}, function (res) {
+                        if (res) {
+                            layer.msg('更新成功!');
                         }
                     });
                 });

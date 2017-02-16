@@ -10,17 +10,17 @@ define(function(require, exports, module) {
             ajax: {
                 create: {
                     type: 'POST',
-                    url: '/admin/user',
+                    url: '/admin/role',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 },
                 edit: {
                     type: 'PUT',
-                    url: '/admin/user/_id_',
+                    url: '/admin/role/_id_',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 },
                 remove: {
                     type: 'DELETE',
-                    url: '/admin/user/_id_',
+                    url: '/admin/role/_id_',
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 }
             },
@@ -28,10 +28,10 @@ define(function(require, exports, module) {
             table: "#" + tableId,
             idSrc: 'id',
             fields: [
-                { 'label':  '名称', 'name': 'name','type': 'text' },
-                { 'label':  '密码', 'name': 'password','type': 'password' },
-                { 'label':  'Email', 'name': 'email','type': 'text' },
-            ]
+    { 'label':  '名称', 'name': 'name','type': 'text' },
+        { 'label':  '显示名称', 'name': 'display_name','type': 'text' },
+        { 'label':  '描述', 'name': 'description','type': 'text' },
+        ]
         });
 
         var table = $("#" + tableId).DataTable({
@@ -42,15 +42,14 @@ define(function(require, exports, module) {
             select: true,
             paging: true,
             rowId: "id",
-            ajax: '/admin/user/pagination',
+            ajax: '/admin/role/pagination',
             columns: [
                     {  'data': 'id' },
                     {  'data': 'name' },
-                    {  'data': 'password' },
-                    {  'data': 'email' },
-                    {  'data': 'remember_token' },
-                    {  'data': 'created_at' },
+                    {  'data': 'display_name' },
+                    {  'data': 'description' },
                     {  'data': 'updated_at' },
+                    {  'data': 'created_at' },
             ],
             buttons: [
                 // { text: '新增', action: function () { }  },
