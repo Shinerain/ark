@@ -104,4 +104,17 @@ class DbHelper{
 	protected function getIsNullable($able){
 		return $able == 'YES' ? true : false;
 	}
+
+	public function exists($table){
+		$conn = $this->getConn();
+		$db = $this->db;
+		$query = "SELECT count(1) as c FROM `TABLES` WHERE TABLE_SCHEMA='$db' and TABLE_NAME='$table'";
+		$row = $conn->query($query)->fetch();
+		//var_dump($row);
+		return $row['c'] == 1;
+	}
+
+	public static function Instance(){
+		return new DbHelper();
+	}
 }

@@ -59,7 +59,34 @@ class SysColumnController extends DataTableController
         //
     }
 
-    public function table(Request $request, $id){
+	/**
+	 * Update the specified resource in storage.
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function update(Request $request, $id)
+	{
+		//
+		$data = $request->input('data', []);
+		if(empty($data))
+			return $this->fail('data is empty');
+
+		$props = current($data);
+		$fieldErrors = $this->validateFields($props);
+		if(!empty($fieldErrors)){
+			return $this->fail('validate error', $fieldErrors);
+		} else {
+			$entity = $this->newEntity()->newQuery()->find($id);
+			$entity->fill($props+['status'=>2]);
+			$entity->save();
+			return $this->success($entity);
+		}
+	}
+
+
+	public function table(Request $request, $id){
     	$table = SysTable::find($id);
     	$dics =  DB::select('select DISTINCT category from sys_dics ');
     	$categories = array_map(function ($item){

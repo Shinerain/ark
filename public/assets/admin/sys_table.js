@@ -45,6 +45,7 @@ define(function(require, exports, module) {
             rowId: "id",
             ajax: '/admin/sys-table/pagination',
             columns: [
+                {  'data': 'status' },
                 {  'data': 'id' },
                 {  'data': 'name' },
                 {  'data': 'model_name' },
@@ -53,9 +54,20 @@ define(function(require, exports, module) {
                 {  'data': 'created_at' },
                 {  'data': 'updated_at' },
                 {  'data': 'id', 'render': function (data, type, row) {
-                    return '<a href="/admin/sys-table/'+data+'/columns">设定字段</a>&nbsp;&nbsp;&nbsp;<a href="/admin/sys-table/'+data+'/columns">生成数据表</a>';
+                    var html =  '<a class="btn btn-default" href="/admin/sys-table/'+data+'/columns">设定字段</a>&nbsp;&nbsp;&nbsp;';
+                    if(row['status'] == 0){
+                        html += '<button class="btn btn-primary buildtable" data-table-id="'+data+'" >生成数据表</button>';
+                    }else{
+                        html += '<button class="btn btn-primary rebuildtable" data-table-id="'+data+'" >重新生成数据表</button>';
+                    }
+                    return html;
                 } },
             ],
+            columnDefs:[{
+                targets:[0],
+                visible: false,
+                searchable: false
+            }],
             buttons: [
                 // { text: '新增', action: function () { }  },
                 // { text: '编辑', className: 'edit', enabled: false },
@@ -75,6 +87,42 @@ define(function(require, exports, module) {
         //     var count = table.rows( { selected: true } ).count();
         //     table.buttons( ['.edit', '.delete'] ).enable(count > 0);
         // }
+        table.on('draw', function () {
+            //alert( 'Table redrawn' );
+            bindEvt();
+        });
+        bindEvt();
+
+
+        function bindEvt(id) {
+            $('.buildtable').on("click", function () {
+                var id = $(this).attr('data-table-id');
+                var url = '/admin/sys-table/' + id + '/build';
+                layer.confirm('确定生成?', {
+                    buttons: ['确定', '取消']
+                }, function () {
+                    $.post(url, {_token: $('meta[name="_token"]').attr('content')}, function (res) {
+                        if (res) {
+                            layer.msg('生成成功!');
+                        }
+                    });
+                });
+            });
+
+            $('.rebuildtable').on("click", function () {
+                var id = $(this).attr('data-table-id');
+                var url = '/admin/sys-table/' + id + '/rebuild';
+                layer.confirm('确定重新生成?', {
+                    buttons: ['确定', '取消']
+                }, function () {
+                    $.post(url, {_token: $('meta[name="_token"]').attr('content')}, function (res) {
+                        if (res) {
+                            layer.msg('重新生成成功!');
+                        }
+                    });
+                });
+            });
+        }
 
     }
 

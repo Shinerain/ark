@@ -31,6 +31,7 @@
                         <table id="moduleTable" class="table table-bordered table-hover">
                             <thead>
                             <tr>
+                                <th>status</th>
                                 <th>id</th>
                                 <th>名称</th>
                                 <th>实体名称</th>

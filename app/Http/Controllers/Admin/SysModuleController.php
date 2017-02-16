@@ -186,7 +186,15 @@ class SysModuleController extends DataTableController
 			if(!empty($files)){
 				foreach ($files as $file){
 					$att = $file + ['sys_module_id' => $id];
-					SysModuleFile::create($att);
+					//check exists
+					$moduleFile = SysModuleFile::where('sys_module_id', $id)->where('name', $file['name'])->first();
+					if(!empty($moduleFile)){
+						$moduleFile->path = $file['path'];
+						$moduleFile->content = $file['content'];
+						$moduleFile->save();
+					}else{
+						SysModuleFile::create($att);
+					}
 				}
 			}
 			return response()->json(['code' => 200]);

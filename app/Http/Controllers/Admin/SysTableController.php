@@ -1,9 +1,13 @@
 <?php
 namespace App\Http\Controllers\Admin;
 
+use App\Models\SysColumn;
+use App\Services\DbHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\DataTableController;
 use App\Models\SysTable;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Database\Schema\Blueprint;
 
 class SysTableController extends DataTableController
 {
@@ -67,6 +71,73 @@ class SysTableController extends DataTableController
 	public function pagination(Request $request, $searchCols = [], $with = [], $conditionCall = NULL){
 		$searchCols = ["desc","engine","model_name","name"];
 		return parent::pagination($request, $searchCols);
+	}
+
+	/**
+	 * 生成数据库表
+	 * @param Request $request
+	 * @param $id
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function build(Request $request, $id){
+		$entity = SysTable::find($id);
+		$exists = DbHelper::Instance()->exists($entity->name);
+		if($exists){
+			$columns = SysColumn::where('sys_table_id', $entity->id)->where('status', '<>', 1)->orderBy('sort','asc')->get();
+			Schema::table($entity->name, function (Blueprint $table) use($columns) {
+				//changed columns
+				foreach ($columns as $column){
+					$this->buildCol($table, $column);
+				}
+			});
+		}else{
+			$columns = SysColumn::where('sys_table_id', $entity->id)->orderBy('sort','asc')->get();
+			Schema::create($entity->name, function (Blueprint $table) use($columns) {
+				foreach ($columns as $column){
+					$this->buildCol($table, $column);
+				}
+			});
+		}
+		reset($columns);
+		foreach ($columns as $column){
+			$column->status=1;
+			$column->save();
+		}
+		$entity->status = 1;
+		$entity->save();
+		return $this->success(1);
+	}
+
+	function buildCol(Blueprint $table, $column){
+		if($column->name == 'id' && $column->is_autoincrement){
+			$dbCol = $table->increments($column->name);
+		}else{
+			$dbCol = $table->{$column->data_type}($column->name);
+			if($column->key_type =='primary'){
+				$dbCol = $table->primary($column->name);
+			}
+		}
+		if($column->is_nullable){
+			$dbCol->nullable();
+		}
+		if(!empty($column->comment)){
+			$dbCol->comment($column->comment);
+		}
+		if(!empty($column->default_value)){
+			$dbCol->default($column->default_value);
+		}
+	}
+
+	/**
+	 * 重新生成
+	 * @param Request $request
+	 * @param $id
+	 * @return \Illuminate\Http\JsonResponse
+	 */
+	public function rebuild(Request $request, $id){
+		$entity = SysTable::find($id);
+		Schema::drop($entity->name);
+		return $this->build($request, $id);
 	}
 
 }
