@@ -113,7 +113,19 @@ define(function(require, exports, module) {
             ],
             buttons: [
                 { text: '编辑', className: 'edit', enabled: false, action: function (e, dt, node, config) {
-
+                    var item = table.rows( { selected: true } ).data();
+                    console.log(item);
+                    if(item) {
+                        var url = '/admin/sys-module-file/edit/' + item[0]['id'];
+                        layer.open({
+                            title: '编辑代码',
+                            area: ['800px', '600px'],
+                            type: 2,
+                            closeBtn: 1,
+                            maxmin: 1,
+                            content: url
+                        });
+                    }
                 } },
                 { text: '删除', className: 'delete', enabled: false, action: function (e, dt, node, config) {
                     var item = table.rows( { selected: true } ).data();

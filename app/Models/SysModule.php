@@ -16,4 +16,11 @@ class SysModule extends BaseModel
 		return $this->belongsTo(SysModule::class, 'pid');
 	}
 
+	/**
+	 * @param $query
+	 * @return \Illuminate\Database\Eloquent\Builder
+	 */
+	public function scopeTops($query){
+		return $query->where('pid',0);
+	}
 }

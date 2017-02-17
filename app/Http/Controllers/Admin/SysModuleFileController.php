@@ -35,4 +35,9 @@ class SysModuleFileController extends DataTableController
 		$entity=[];
 		return $this->success($entity);
 	}
+
+	public function open(Request $request, $id){
+		$file = SysModuleFile::find($id);
+		return view('admin.sys-module-file.editor', ['file' => $file]);
+	}
 }
