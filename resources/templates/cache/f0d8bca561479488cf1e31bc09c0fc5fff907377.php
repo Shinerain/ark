@@ -28,6 +28,6 @@ use Illuminate\Database\Eloquent\Model;
 class <?php echo e($model); ?> extends Model
 {
 	//
-	protected $table = '<?php echo e($table); ?>';
+	protected $table = '<?php echo e($table->name); ?>';
 	protected $guarded = ['id'];
 }

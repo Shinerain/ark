@@ -4,16 +4,6 @@ function exclude($column){
 	$arr = ['id', 'created_at', 'updated_at'];
 	return in_array($column->name , $arr);
 }
-function showEditorType($column){
-	if(empty($column))
-		return '';
-
-	switch ($column->name){
-		case 'created_at':
-		case 'updated_at':
-			return "'type':'datetime'";
-	}
-}
 ?>
 
 /**
@@ -48,7 +38,7 @@ define(function(require, exports, module) {
             fields: [
 <?php $__empty_1 = true; $__currentLoopData = $columns; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $col): $__env->incrementLoopIndices(); $loop = $__env->getFirstLoop(); $__empty_1 = false; ?>
 <?php if(!exclude($col)): ?>
-    { 'label':  '<?php echo e($col->display); ?>', 'name': '<?php echo e($col->name); ?>',<?=showEditorType($col)?> },
+    { 'label':  '<?php echo e($col->display); ?>', 'name': '<?php echo e($col->name); ?>','type': '<?php echo e($col->ctrl_type); ?>' },
     <?php endif; ?>
 <?php endforeach; $__env->popLoop(); $loop = $__env->getFirstLoop(); if ($__empty_1): ?>
 <?php endif; ?>
