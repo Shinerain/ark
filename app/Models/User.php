@@ -2,29 +2,26 @@
 
 namespace App\Models;
 
-use Illuminate\Notifications\Notifiable;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Illuminate\Database\Eloquent\Model;
 
-class User extends Authenticatable
+/**
+ * model description
+ * Class User
+ * @package  App\Models
+ *
+ * @author  xrs
+ * @SWG\Model(id="User")
+ * @SWG\Property(name="id", type="integer", description="id")
+ * @SWG\Property(name="name", type="string", description="名称")
+ * @SWG\Property(name="password", type="string", description="密码")
+ * @SWG\Property(name="email", type="string", description="Email")
+ * @SWG\Property(name="remember_token", type="string", description="")
+ * @SWG\Property(name="created_at", type="timestamp", description="创建时间")
+ * @SWG\Property(name="updated_at", type="timestamp", description="修改时间")
+  */
+class User extends Model
 {
-    use Notifiable;
-	use EntrustUserTrait;
-	/**
-     * The attributes that are mass assignable.
-     *
-     * @var array
-     */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
-
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+	//
+	protected $table = 'users';
+	protected $guarded = ['id'];
 }

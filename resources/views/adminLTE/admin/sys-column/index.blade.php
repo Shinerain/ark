@@ -1,7 +1,45 @@
-@extends('layout.collapsed-sidebar')
+@extends('admin.layout.collapsed-sidebar')
 
 @section('styles')
-    <link rel="stylesheet" href="/asset/AdminLTE-2.3.7/plugins/datatables/dataTables.bootstrap.css" />
+    @include('admin.layout.datatable-css')
+    <style type="text/css">
+        #customForm {
+            display: flex;
+            flex-flow: row wrap;
+        }
+
+        #customForm fieldset {
+            flex: 1;
+            border: 1px solid #aaa;
+            margin: 0.5em;
+        }
+
+        #customForm fieldset legend {
+            padding: 3px 20px;
+            border: 1px solid #aaa;
+            font-weight: bold;
+        }
+
+        #customForm fieldset.basic {
+            flex: 2 100%;
+        }
+
+        #customForm fieldset.basic legend {
+            background: #bfffbf;
+        }
+
+        #customForm fieldset.type legend {
+            background: #ffffbf;
+        }
+
+        #customForm fieldset.other legend {
+            background: #ffbfbf;
+        }
+
+        #customForm div.DTE_Field {
+            padding: 3px;
+        }
+    </style>
 @endsection
 
 @section('content')
@@ -9,7 +47,7 @@
     <section class="content-header">
         <h1>
             系统管理
-            <small>模块管理</small>
+            <small>数据表字段管理</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -24,62 +62,55 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">数据表字段列表</h3>
+                        <h3 class="box-title">数据表【{{$table->name}}】字段列表</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
-                        <div class="margin">
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-success"><i class="fa fa-pencil"></i> 新增</button>
-                            </div>
+                        <div id="customFormDiv" style="display: none;">
+                        <div id="customForm">
+                            <fieldset class="basic">
+                                <legend>基本</legend>
+                                <editor-field name="sys_table_id"></editor-field>
+                                <editor-field name="name"></editor-field>
+                                <editor-field name="display"></editor-field>
+                                <editor-field name="comment"></editor-field>
+                                <editor-field name="is_nullable"></editor-field>
+                                <editor-field name="is_autoincrement"></editor-field>
+                                <editor-field name="key_type"></editor-field>
+                            </fieldset>
+                            <fieldset class="type">
+                                <legend>类型</legend>
+                                <editor-field name="data_type"></editor-field>
+                                <editor-field name="length"></editor-field>
+                                <editor-field name="decimal_scale"></editor-field>
+                                <editor-field name="default_value"></editor-field>
+                            </fieldset>
+                            <fieldset class="other">
+                                <legend>其他</legend>
+                                <editor-field name="ctrl_type"></editor-field>
+                                <editor-field name="ctrl_data_source"></editor-field>
+                                <editor-field name="ctrl_valid_rule"></editor-field>
+                                <editor-field name="sort"></editor-field>
+                            </fieldset>
                         </div>
-
+                        </div>
                         <table id="columnTable" class="table table-bordered table-hover">
                             <thead>
                             <tr>
+                                <th>sys_table_id</th>
                                 <th>行号</th>
                                 <th>名称</th>
                                 <th>描述</th>
-                                <th>图标</th>
+                                <th>数据类型</th>
+                                <th>是否可空</th>
+                                <th>键</th>
+                                <th>排序</th>
                                 <th>创建时间</th>
                                 <th>修改时间</th>
-                                <th>操作</th>
                             </tr>
                             </thead>
                             <tbody>
-                            <?php $i =1; ?>
-                            @forelse($columns as $m)
-                                <tr>
-                                    <td>{{$i++}}</td>
-                                    <td>{{$m->name}}</td>
-                                    <td>{{$m->display}}</td>
-                                    <td>{{$m->data_type}}</td>
-                                    <td>{{$m->length}}</td>
-                                    <td>{{$m->decimal_scale}}</td>
-                                    <td><input type="checkbox" {{$m->is_nullable? 'checked':''}} /></td>
-                                    <td><input type="checkbox" {{$m->is_autoincrement? 'checked':''}} /></td>
-                                    <td>
-                                        <select >
-                                            @forelse($key_types as $kt)
-                                            <option value="{{$kt->value}}" {{$m->key_type == $ky->value ? 'selected':''}}>{{$kt->text}}</option>
-                                                @empty
-                                            @endforelse
-                                        </select>
-                                    </td>
-                                    <td>{{$m->created_at}}</td>
-                                    <td>{{$m->updated_at}}</td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button type="button" class="btn btn-info"><i class="fa fa-pencil-square-o"></i></button>
-                                            <button type="button" class="btn bg-purple"><i class="fa fa-navicon"></i></button>
-                                            <button type="button" class="btn btn-danger"><i class="fa fa-close"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                @empty
-                            @endforelse
                             </tbody>
-
                         </table>
                     </div>
                     <!-- /.box-body -->
@@ -94,17 +125,14 @@
 @endsection
 
 @section('js')
-    <script src="/asset/AdminLTE-2.3.7/plugins/datatables/jquery.dataTables.min.js"></script>
-    <script src="/asset/AdminLTE-2.3.7/plugins/datatables/dataTables.bootstrap.min.js"></script>
-    <script src="/asset/AdminLTE-2.3.7/dist/js/demo.js"></script>
+    @include('admin.layout.datatable-js')
     <script type="text/javascript">
-        $("#columnTable").DataTable({
-            "paging": true,
-            "lengthChange": true,
-            "searching": true,
-            "ordering": true,
-            "info": true,
-            "autoWidth": false
+        $(function () {
+            dicCategories = {!! json_encode($categories) !!}
+            seajs.use('admin/sys_column.js', function (app) {
+                app.index($, 'columnTable', '{{$table->id}}', dicCategories);
+            });
         });
     </script>
+
 @endsection

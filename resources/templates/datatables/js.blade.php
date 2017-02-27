@@ -4,16 +4,6 @@ function exclude($column){
 	$arr = ['id', 'created_at', 'updated_at'];
 	return in_array($column->name , $arr);
 }
-function showEditorType($column){
-	if(empty($column))
-		return '';
-
-	switch ($column->name){
-		case 'created_at':
-		case 'updated_at':
-			return "'type':'datetime'";
-	}
-}
 ?>
 
 /**
@@ -48,7 +38,7 @@ define(function(require, exports, module) {
             fields: [
 @forelse($columns as $col)
 @if(!exclude($col))
-    { 'label':  '{{$col->display}}', 'name': '{{$col->name}}',<?=showEditorType($col)?> },
+    { 'label':  '{{$col->display}}', 'name': '{{$col->name}}','type': '{{$col->ctrl_type}}' },
     @endif
 @empty
 @endforelse

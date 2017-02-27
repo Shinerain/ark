@@ -12,10 +12,10 @@ return [
 		'template_cache' =>  realpath(base_path('resources/templates/cache')),
 	],
 	//outputs groups
-	'outputs' => ['admin', 'api','datatables'],
+	'outputs' => ['base', 'api','datatables'],
 	//output group
 	//template name => output settings
-	'admin' => [
+	'base' => [
 		'model' => ['path' => app_path('Models'), 'name_pattern' => '{model}.php'],
 		//'route' => ['path' => base_path('routes/admin'), 'name_pattern' => '{model}.php', 'name_format' => 'strtolower'],
 		//'controller' => ['path' => app_path('Http/Controllers/Admin'), 'name_pattern' => '{model}Controller.php'],

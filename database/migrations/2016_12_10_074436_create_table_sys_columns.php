@@ -22,14 +22,16 @@ class CreateTableSysColumns extends Migration
 		    $table->string('data_type')->comment('字段类型');
 		    $table->integer("length")->default(0)->comment('字段长度');
 		    $table->integer("decimal_scale")->default(0)->comment('小数点');
-		    $table->char('is_nullable', 1)->default('Y')->comment('是否为空');
+		    $table->integer('is_nullable')->default(0)->comment('是否为空');
 		    $table->integer('is_autoincrement')->default(0)->comment('是否自增');
 		    $table->string('key_type')->default('')->comment('键类型');
 		    $table->string('default_value')->default('')->comment('默认值');
 		    $table->string('comment')->default('')->comment('描述');
 		    $table->string('ctrl_type')->default('')->comment('控件类型');
+		    $table->string('ctrl_data_source')->default('')->comment('下拉选择控件数据源');
 		    $table->string('ctrl_valid_rule')->default('')->comment('验证规则');
-
+		    $table->integer('sort')->default(0)->comment('排序');
+		    $table->integer('status')->default(0)->comment('状态（0-初始,1-被创建/更新,2-被修改）');
 		    $table->timestamps();
 	    });
     }

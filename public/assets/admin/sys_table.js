@@ -28,11 +28,11 @@ define(function(require, exports, module) {
             table: "#" + tableId,
             idSrc: 'id',
             fields: [
-                { 'label':  'desc', 'name': 'desc', },
-                { 'label':  'engine', 'name': 'engine', },
-                    { 'label':  'model_name', 'name': 'model_name', },
-                { 'label':  'name', 'name': 'name', },
-        ]
+                { 'label':  '名称', 'name': 'name', },
+                { 'label':  '实体名称', 'name': 'model_name', },
+                { 'label':  '描述', 'name': 'desc', },
+                { 'label':  '引擎', 'name': 'engine', 'type':'select', 'options':[{'label':'InnoDB', 'value':'InnoDB'},{'label':'MyISAM', 'value':'MyISAM'}]},
+            ]
         });
 
         var table = $("#" + tableId).DataTable({
@@ -45,16 +45,41 @@ define(function(require, exports, module) {
             rowId: "id",
             ajax: '/admin/sys-table/pagination',
             columns: [
-                    {  'data': 'created_at' },
-                    {  'data': 'desc' },
-                    {  'data': 'engine' },
-                    {  'data': 'id' },
-                    {  'data': 'model_name' },
-                    {  'data': 'name' },
-                    {  'data': 'updated_at' },
+                {  'data': 'status' },
+                {  'data': 'id' },
+                {  'data': 'name' },
+                {  'data': 'model_name' },
+                {  'data': 'desc' },
+                {  'data': 'engine' },
+                {  'data': 'created_at' },
+                {  'data': 'updated_at' },
+                {  'data': 'id', 'render': function (data, type, row) {
+                    var html =  '<a href="/admin/sys-table/'+data+'/columns">设定字段</a>&nbsp;';
+                    if(row['status'] == 0){
+                        html += '<a href="javascript:void;" class="buildtable" data-table-id="'+data+'" >生成数据表</a>&nbsp;';
+                    }else{
+                        html += '<a  href="javascript:void;" class="updatetable" data-table-id="'+data+'" >更新数据表</a>&nbsp;';
+                        html += '<a  href="javascript:void;" class="rebuildtable" data-table-id="'+data+'" >重新生成数据表</a>&nbsp;';
+                    }
+                    return html;
+                } },
             ],
+            columnDefs:[{
+                targets:[0],
+                visible: false,
+                searchable: false
+            }],
             buttons: [
-                // { text: '新增', action: function () { }  },
+                { text: '加载已有表', action: function () {
+                    layer.open({
+                        title: '从已有表加载',
+                        area: ['600px', '400px'],
+                        type: 2,
+                        closeBtn: 1,
+                        maxmin: 1,
+                        content: '/admin/sys-table/db'
+                    });
+                }  },
                 // { text: '编辑', className: 'edit', enabled: false },
                 // { text: '删除', className: 'delete', enabled: false },
                 {extend: "create", text: '新增<i class="fa fa-fw fa-plus"></i>', editor: editor},
@@ -72,6 +97,56 @@ define(function(require, exports, module) {
         //     var count = table.rows( { selected: true } ).count();
         //     table.buttons( ['.edit', '.delete'] ).enable(count > 0);
         // }
+        table.on('draw', function () {
+            //alert( 'Table redrawn' );
+            bindEvt();
+        });
+        bindEvt();
+
+
+        function bindEvt(id) {
+            $('.buildtable').on("click", function () {
+                var id = $(this).attr('data-table-id');
+                var url = '/admin/sys-table/' + id + '/build';
+                layer.confirm('确定生成?', {
+                    buttons: ['确定', '取消']
+                }, function () {
+                    $.post(url, {_token: $('meta[name="_token"]').attr('content')}, function (res) {
+                        if (res) {
+                            layer.msg('生成成功!');
+                        }
+                    });
+                });
+            });
+
+            $('.updatetable').on("click", function () {
+                var id = $(this).attr('data-table-id');
+                var url = '/admin/sys-table/' + id + '/build';
+                layer.confirm('确定更新?', {
+                    buttons: ['确定', '取消']
+                }, function () {
+                    $.post(url, {_token: $('meta[name="_token"]').attr('content')}, function (res) {
+                        if (res) {
+                            layer.msg('更新成功!');
+                        }
+                    });
+                });
+            });
+
+            $('.rebuildtable').on("click", function () {
+                var id = $(this).attr('data-table-id');
+                var url = '/admin/sys-table/' + id + '/rebuild';
+                layer.confirm('确定重新生成?', {
+                    buttons: ['确定', '取消']
+                }, function () {
+                    $.post(url, {_token: $('meta[name="_token"]').attr('content')}, function (res) {
+                        if (res) {
+                            layer.msg('重新生成成功!');
+                        }
+                    });
+                });
+            });
+        }
 
     }
 

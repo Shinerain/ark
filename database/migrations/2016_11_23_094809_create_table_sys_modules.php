@@ -23,6 +23,7 @@ class CreateTableSysModules extends Migration
 		    $table->integer('is_page')->default(0)->comment('是否功能页');
 		    $table->string('url')->default('')->comment('链接地址');
 		    $table->integer('sort')->default(0)->comment('排序');
+		    $table->integer('permission_flag')->default(0)->comment('权限标识');
 		    $table->timestamps();
 	    });
     }

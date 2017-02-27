@@ -32,10 +32,14 @@ class DbHelper{
 		return new PDO("$this->driver:host=$this->host;dbname=$this->schemaDb;charset=utf8", $user, $pwd);
 	}
 
-	public function getTables(){
+	public function getTables($tableName = null){
 		$conn = $this->getConn();
 		$db = $this->db;
-		$query = "SELECT * FROM `TABLES` WHERE TABLE_SCHEMA='$db' ";
+		if(is_null($tableName)) {
+			$query = "SELECT * FROM `TABLES` WHERE TABLE_SCHEMA='$db' ";
+		}else{
+			$query = "SELECT * FROM `TABLES` WHERE TABLE_SCHEMA='$db'  and TABLE_NAME='$tableName'";
+		}
 		$rows = $conn->query($query);
 		$tables = [];
 		foreach ($rows as $row){
@@ -103,5 +107,18 @@ class DbHelper{
 
 	protected function getIsNullable($able){
 		return $able == 'YES' ? true : false;
+	}
+
+	public function exists($table){
+		$conn = $this->getConn();
+		$db = $this->db;
+		$query = "SELECT count(1) as c FROM `TABLES` WHERE TABLE_SCHEMA='$db' and TABLE_NAME='$table'";
+		$row = $conn->query($query)->fetch();
+		//var_dump($row);
+		return $row['c'] == 1;
+	}
+
+	public static function Instance(){
+		return new DbHelper();
 	}
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Closure;
 
 /**
  * controller for UI Plugins: Datatables , Editor
@@ -120,9 +121,11 @@ abstract class DataTableController extends Controller
 	 * Datatables UI page
 	 * @param Request $request
 	 * @param array $searchCols
+	 * @param array $with
+	 * @param $conditionCall
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function pagination(Request $request, $searchCols = []){
+	public function pagination(Request $request, $searchCols = [], $with = [], $conditionCall = null){
 		$start =  $request->input('start', 0);
 		$length = $request->input('length', 10);
 		$columns = $request->input('columns',[]);
@@ -131,6 +134,10 @@ abstract class DataTableController extends Controller
 		$draw = $request->input('draw', 0);
 
 		$queryBuilder = $this->newEntity()->newQuery();
+		if(!empty($with)){
+			$queryBuilder->with($with);
+		}
+
 		$fields = [];
 		$conditions = [];
 		foreach ($columns as $column){
@@ -142,6 +149,10 @@ abstract class DataTableController extends Controller
 
 		$total = $queryBuilder->count();
 
+		if($conditionCall != null && is_callable($conditionCall)){
+			$conditionCall($queryBuilder);
+		}
+
 		foreach ($conditions as $col => $val) {
 			$queryBuilder->where($col, $val);
 		}
@@ -152,7 +163,6 @@ abstract class DataTableController extends Controller
 					$query->orWhere($sc, 'like', '%' . $search['value'] . '%');
 				}
 			});
-
 		}
 		$filterCount = $queryBuilder->count();
 
@@ -170,6 +180,31 @@ abstract class DataTableController extends Controller
 			'data' => $entities
 		];
 		return response()->json($result);
+	}
+
+	/**
+	 * 将实体数据转换成树形（bootstrap treeview）数据
+	 * @param $entity
+	 * @param $props 属性映射集合 ['text' => 'name', 'data-id' => 'id']
+	 * @return array
+	 */
+	public function toBootstrapTreeViewData($entity, $props){
+		$data = ['item' => $entity];
+		if(!empty($entity)){
+			foreach ($props as $k => $val){
+				$data[$k] = $entity->{$val};
+			}
+
+			if(!empty($entity->children)){
+				$nodes = [];
+				foreach ($entity->children as $child){
+					$nodes[] = $this->toBootstrapTreeViewData($child, $props);
+				}
+				if(!empty($nodes))
+					$data['nodes'] = $nodes;
+			}
+		}
+		return $data;
 	}
 
 	protected function validateFields($data)
@@ -190,7 +225,7 @@ abstract class DataTableController extends Controller
 	}
 
 	public function success($data){
-		return response()->json(['data' => [$data]]);
+		return response()->json(['data' => [$data], 'cancelled' => 0]);
 	}
 
 	public function fail($error, $fieldErrors = []){

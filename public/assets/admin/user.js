@@ -4,7 +4,7 @@
 define(function(require, exports, module) {
 
     var zhCN = require('datatableZh');
-
+    var editorCN = require('i18n');
     exports.index = function ($, tableId) {
         var editor = new $.fn.dataTable.Editor({
             ajax: {
@@ -24,14 +24,14 @@ define(function(require, exports, module) {
                     data: {_token: $('meta[name="_token"]').attr('content')},
                 }
             },
+            i18n: editorCN,
             table: "#" + tableId,
             idSrc: 'id',
             fields: [
-                { 'label':  'email', 'name': 'email', },
-                    { 'label':  'name', 'name': 'name', },
-                { 'label':  'password', 'name': 'password', },
-                { 'label':  'remember_token', 'name': 'remember_token', },
-        ]
+                { 'label':  '名称', 'name': 'name','type': 'text' },
+                { 'label':  '密码', 'name': 'password','type': 'password' },
+                { 'label':  'Email', 'name': 'email','type': 'text' },
+            ]
         });
 
         var table = $("#" + tableId).DataTable({
@@ -44,12 +44,12 @@ define(function(require, exports, module) {
             rowId: "id",
             ajax: '/admin/user/pagination',
             columns: [
-                    {  'data': 'created_at' },
-                    {  'data': 'email' },
                     {  'data': 'id' },
                     {  'data': 'name' },
                     {  'data': 'password' },
+                    {  'data': 'email' },
                     {  'data': 'remember_token' },
+                    {  'data': 'created_at' },
                     {  'data': 'updated_at' },
             ],
             buttons: [

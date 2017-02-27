@@ -7,13 +7,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            top module
-            <small>users</small>
+            用户权限管理
+            <small>用户管理</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">top module</a></li>
-            <li class="active">users</li>
+            <li><a href="#">用户权限管理</a></li>
+            <li class="active">用户管理</li>
         </ol>
     </section>
 
@@ -31,13 +31,13 @@
                         <table id="moduleTable" class="table table-bordered table-hover">
                             <thead>
                             <tr>
-                                <th>created_at</th>
-                                <th>email</th>
                                 <th>id</th>
-                                <th>name</th>
-                                <th>password</th>
+                                <th>名称</th>
+                                <th>密码</th>
+                                <th>Email</th>
                                 <th>remember_token</th>
-                                <th>updated_at</th>
+                                <th>创建时间</th>
+                                <th>修改时间</th>
                             </tr>
                             </thead>
                         </table>

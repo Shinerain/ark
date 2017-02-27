@@ -31,5 +31,6 @@ class CreateTableSysDics extends Migration
     public function down()
     {
         //
+	    Schema::dropIfExists('sys_dics');
     }
 }

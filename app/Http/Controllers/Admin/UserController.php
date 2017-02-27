@@ -62,9 +62,9 @@ class UserController extends DataTableController
 	* @param  array $searchCols
 	* @return  \Illuminate\Http\JsonResponse
 	*/
-	public function pagination(Request $request, $searchCols = []){
-		$searchCols = ["email","name","password","remember_token"];
-		return parent::pagination($request, $searchCols);
+	public function pagination(Request $request,  $searchCols = [], $with = [], $conditionCall = null){
+		$searchCols = ["name","password","email","remember_token"];
+		return parent::pagination($request, $searchCols, $with, $conditionCall);
 	}
 
 }

@@ -1,85 +1,70 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\DataTableController;
+use App\Models\Permission;
 
-class PermissionController extends Controller
+class PermissionController extends DataTableController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-    }
+	public function newEntity(array $attributes = [])
+	{
+		// TODO: Implement newEntity() method.
+		return new Permission($attributes);
+	}
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+	/**
+	* Display a listing of the resource.
+	*
+	* @return  \Illuminate\Http\Response
+	*/
+	public function index()
+	{
+		//
+		return view('admin.permission.index');
+	}
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-    }
+	/**
+	* Show the form for creating a new resource.
+	*
+	* @return  \Illuminate\Http\Response
+	*/
+	public function create()
+	{
+		return view('admin.permission.create');
+	}
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
+	/**
+	* Display the specified resource.
+	*
+	* @param    int  $id
+	* @return  \Illuminate\Http\Response
+	*/
+	public function edit($id)
+	{
+		$entity = Permission::find($id);
+		return view('admin.permission.edit', ['entity' => $entity]);
+	}
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
+	/**
+	* Display the specified resource.
+	*
+	* @param    int  $id
+	* @return  \Illuminate\Http\Response
+	*/
+	public function show($id)
+	{
+		//
+	}
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
+	/**
+	* @param  Request $request
+	* @param  array $searchCols
+	* @return  \Illuminate\Http\JsonResponse
+	*/
+	public function pagination(Request $request,  $searchCols = [], $with = [], $conditionCall = null){
+		$searchCols = ["name","display_name","description","type","data"];
+		return parent::pagination($request, $searchCols, $with, $conditionCall);
+	}
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

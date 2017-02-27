@@ -12,13 +12,13 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            {{$topModule or 'top module'}}
-            <small>{{$table}}</small>
+            {{$module->father->name or 'top module'}}
+            <small>{{$module->name}}</small>
         </h1>
         <ol class="breadcrumb">
             <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
-            <li><a href="#">{{$topModule or 'top module'}}</a></li>
-            <li class="active">{{$table}}</li>
+            <li><a href="#">{{$module->father->name or 'top module'}}</a></li>
+            <li class="active">{{$module->name}}</li>
         </ol>
     </section>
 
@@ -28,7 +28,7 @@
             <div class="col-xs-12">
                 <div class="box">
                     <div class="box-header">
-                        <h3 class="box-title">{{$table}}列表</h3>
+                        <h3 class="box-title">{{$table->desc}}列表</h3>
                     </div>
                     <!-- /.box-header -->
                     <div class="box-body">
@@ -37,7 +37,7 @@
                             <thead>
                             <tr>
                 @forelse($columns as $col)
-                <th>{{$col->name}}</th>
+                <th>{{$col->display}}</th>
                 @empty
                 @endforelse
             </tr>

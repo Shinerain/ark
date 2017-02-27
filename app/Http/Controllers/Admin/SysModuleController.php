@@ -3,6 +3,11 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\DataTableController;
+use App\Models\SysColumn;
+use App\Models\SysModuleFile;
+use App\Models\SysTable;
+use App\Services\CodeBuilder;
+use App\Services\DbHelper;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\SysModule ;
@@ -18,12 +23,15 @@ class SysModuleController extends DataTableController
     public function index()
     {
         //
+	    $icons = SysDic::where('category', 'icon')->get();
 	    $entities = SysModule::where('pid', 0)->get();
 	    $data = $entities->map(function ($entity){
-	    	return $this->toBootstrapTreeViewData($entity, ['text' => 'name', 'data-id' => 'id']);
+	    	return $this->toBootstrapTreeViewData($entity, ['text' => 'name', 'data-id' => 'id', 'icon' => 'icon']);
 	    });
 
-	    return view('admin.sys-module.index')->withModules($data);
+	    return view('admin.sys-module.index')
+		    ->withModules($data)
+		    ->withIcons($icons);
     }
 
     /**
@@ -38,27 +46,26 @@ class SysModuleController extends DataTableController
 	    return view('admin.sys-module.create', ['icons' => $icons]);
     }
 
-//    /**
-//     * Store a newly created resource in storage.
-//     *
-//     * @param  \Illuminate\Http\Request  $request
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function store(Request $request)
-//    {
-//        //
-////	    $data = $request->all();
-////	    unset($data['_token']);
-////	    $entity = SysModule::create($data);
-////	    $this->flash_success('store success!');
-////		return redirect(route('sys-module.index'));
-//	    $data = $request->input('data', []);
-//	    if(empty($data))
-//		    return response()->json(['data' => []]);
-//	    $props = current($data);
-//	    $entity = SysModule::create($props);
-//	    return response()->json(['data' => [$entity]]);
-//    }
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        //
+	    $data = $request->all();
+	    unset($data['_token']);
+	    if($data['id']){
+		    $entity = SysModule::find($data['id']);
+		    $entity->fill($data);
+		    $entity->save();
+	    }else{
+		    $entity = SysModule::create($data);
+	    }
+		return $this->success($entity);
+    }
 
 	/**
 	 * Display the specified resource.
@@ -74,54 +81,19 @@ class SysModuleController extends DataTableController
 		return view('admin.sys-module.edit', ['entity' => $entity, 'icons' => $icons]);
 	}
 
-//	/**
-//	 * Update the specified resource in storage.
-//	 *
-//	 * @param  \Illuminate\Http\Request  $request
-//	 * @param  int  $id
-//	 * @return \Illuminate\Http\Response
-//	 */
-//	public function update(Request $request, $id)
-//	{
-//		//
-////		$entity = SysModule::find($id);
-////		$data = $request->all();
-////		unset($data['_token']);
-////		$entity->fill($data);
-////		$re = $entity->save();
-////		$this->flash_success('update success!');
-////		return redirect(route('sys-module.index'));
-//		$data = $request->input('data', []);
-//		if(empty($data))
-//			return response()->json(['data' => []]);
-//
-//		$props = current($data);
-//		$entity = SysModule::find($id);
-//		$entity->fill($props);
-//		$entity->save();
-//		return response()->json(['data' => [$entity]]);
-//	}
-
-//	/**
-//	 * Remove the specified resource from storage.
-//	 *
-//	 * @param  int  $id
-//	 * @return \Illuminate\Http\Response
-//	 */
-//	public function destroy($id)
-//	{
-//		//
-////		$entity = SysModule::find($id);
-////		$re = $entity->delete();
-////		//$this->flash_success('destroy success!');
-////		//return redirect(route('sys-module.index'));
-////		return response(['success' => $re], 200);
-//
-//		$entity = SysModule::find($id);
-//		$entity->delete();
-//		$entity=[];
-//		return response()->json(['data' => [$entity]]);
-//	}
+	/**
+	 * Remove the specified resource from storage.
+	 *
+	 * @param  int  $id
+	 * @return \Illuminate\Http\Response
+	 */
+	public function destroy($id)
+	{
+		$entity =  $this->newEntity()->newQuery()->find($id);
+		$entity->delete();
+		$entity=[];
+		return $this->success($entity);
+	}
 
 //	public function pagination(Request $request){
 //		//$data = $request->all();
@@ -171,39 +143,59 @@ class SysModuleController extends DataTableController
 	/**
 	 * @param Request $request
 	 * @param array $searchCols
+	 * @param array $with
+	 * @param null $conditionCall
 	 * @return \Illuminate\Http\JsonResponse
 	 */
-	public function pagination(Request $request, $searchCols = []){
+	public function pagination(Request $request, $searchCols = [], $with = [], $conditionCall = NULL){
 		$searchCols = ['name', 'desc'];
-		return parent::pagination($request, $searchCols);
+		return parent::pagination($request, $searchCols, $with, $conditionCall);
 	}
 
 	public function action(){
 		return parent::success([]);
 	}
 
-	/**
-	 * 将实体数据转换成树形（bootstrap treeview）数据
-	 * @param $entity
-	 * @param $props 属性映射集合 ['text' => 'name', 'data-id' => 'id']
-	 * @return array
-	 */
-	public function toBootstrapTreeViewData($entity, $props){
-		$data = [];
-		if(!empty($entity)){
-			foreach ($props as $k => $val){
-				$data[$k] = $entity->{$val};
-			}
-			if(!empty($entity->children)){
-				$nodes = [];
-				foreach ($entity->children as $child){
-					$nodes[] = $this->toBootstrapTreeViewData($child, $props);
-				}
-				if(!empty($nodes))
-					$data['nodes'] = $nodes;
-			}
-		}
-		return $data;
-	}
+	public function genCode(Request $request){
+		if($request->isMethod('GET')) {
+			$id = $request->input('id');
+//			$helper = new DbHelper();
+//			$tables = $helper->getTables();
+			$tables = SysTable::all();
+			return view('admin.sys-module.generate')->withTables($tables)->withId($id);
+		}else{
+			$id = $request->input('id');
+			$tableId = $request->input('tableId');
+			$modelName = $request->input('modelName', '');
+			$templates = $request->input('templates', []);
 
+			$module = SysModule::find($id);
+			$table = SysTable::find($tableId);
+			if(empty($modelName)){
+				$modelName = $table->model_name;//snake_case($tableName);
+			}
+			$columns = SysColumn::where('sys_table_id', $tableId)->orderBy('sort', 'asc')->get();
+			$builder = new CodeBuilder($modelName, $table, $columns, $module);
+			$files = $builder->createFiles($templates);
+			//var_dump($files);
+			if(!empty($files)){
+				foreach ($files as $file){
+					$att = $file + ['sys_module_id' => $id];
+					//check exists
+					$moduleFile = SysModuleFile::where('sys_module_id', $id)->where('name', $file['name'])->first();
+					if(!empty($moduleFile)){
+						$moduleFile->path = $file['path'];
+						$moduleFile->content = $file['content'];
+						$moduleFile->save();
+					}else{
+						SysModuleFile::create($att);
+					}
+				}
+				$module->url = '/admin/' . snake_case($modelName, '-');
+				$module->permission_flag = 'admin_'.snake_case($modelName);
+				$module->save();
+			}
+			return response()->json(['code' => 200]);
+		}
+	}
 }
